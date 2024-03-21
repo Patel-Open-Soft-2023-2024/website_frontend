@@ -56,7 +56,7 @@ const Search : React.FC<SearchProps> = ({
               onChange={(e) => setSearchQuery(e.target.value)}
               type="text"
               placeholder="Titles, people, genres"
-              className="flex-grow bg-transparent text-neutral-100 placeholder:text-neutral-500 pl-2 py-1 focus:outline-none w-[30ch] "
+              className="flex-grow bg-transparent text-neutral-100 placeholder:text-neutral-500 pl-2 py-1 focus:outline-none"
               onBlur={() => setShowSearchBar(false)}
             />
           </div>

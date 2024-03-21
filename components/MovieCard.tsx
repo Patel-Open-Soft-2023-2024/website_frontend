@@ -16,21 +16,24 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
   const router = useRouter();
-  const [showVideo,setShowVideo]=useState(false);
+  const [showVideoTimeout,setShowVideoTimeout]=useState<NodeJS.Timeout>();
   const videoRef=useRef<HTMLVideoElement>(null);
   const { openModal } = useInfoModalStore();
   const {video:videoEl} =useVideoStore();
 
   const redirectToWatch = useCallback(() => router.push(`/watch/${data.id}`), [router, data.id]);
-
   const loadVideo=async ()=>{
-    if (videoRef!.current && data){
-      videoEl && videoEl.pause();
-      videoRef.current.play();
-      console.log("playing",data.title);
+    const playVideo=( )=>{
+      if (videoRef!.current && data){
+        videoEl && videoEl.pause();
+        videoRef.current.play();
+        console.log("playing",data.title);
+      }
     }
+    setShowVideoTimeout(setTimeout(playVideo,400));
   }
   const discardVideo=async()=>{
+    showVideoTimeout && clearTimeout(showVideoTimeout);
     if (videoRef!.current && data){
       videoRef.current.pause();
       console.log("discard",data.title);
@@ -62,9 +65,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
    
   return (
     <div className="group bg-zinc-900 col-span relative">
-      <img onMouseEnter={loadVideo} className="w-full aspect-[4/3] object-cover transition duration-[200ms] opacity-100 group-hover:opacity-0 rounded-sm" alt="Movie" src={data?.thumbnailUrl}></img>
-      <div onMouseLeave={discardVideo} className={`absolute top-0 left-0 z-10 opacity-0 pointer-events-none invisible sm:visible w-full scale-100 group-hover:-translate-y-[10vh] group-hover:pointer-events-auto group-hover:scale-[1.25] group-hover:opacity-100 transition duration-[300ms] ${align}`}>
-        <video ref={videoRef} poster={data?.thumbnailUrl} className="w-full aspect-[4/3] object-cover rounded-t-md cursor-pointer" loop src={data?.videoUrl} preload="none"></video>
+      <img onMouseEnter={loadVideo} className="w-full aspect-[4/3] object-cover transition delay-[300ms] duration-[200ms] opacity-100 group-hover:opacity-0 rounded-sm" alt="Movie" src={data?.thumbnailUrl}></img>
+      <div onMouseLeave={discardVideo} className={`absolute top-0 left-0 z-10 opacity-0 pointer-events-none invisible sm:visible w-full scale-100 group-hover:-translate-y-[10vh] group-hover:pointer-events-auto group-hover:scale-[1.25] group-hover:opacity-100 transition delay-[300ms] duration-[300ms] ${align}`}>
+        <video onClick={redirectToWatch} ref={videoRef} poster={data?.thumbnailUrl} className="w-full aspect-[4/3] object-cover rounded-t-md cursor-pointer" loop src={data?.videoUrl} preload="none"></video>
         <div className="z-10 bg-neutral-800 p-2 lg:p-4 absolute w-full shadow-md rounded-b-md">
           {info}
         </div>

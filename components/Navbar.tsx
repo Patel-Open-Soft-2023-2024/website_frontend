@@ -10,7 +10,6 @@ import NavbarItem from "@/components/NavbarItem";
 import Search from "@/components/Search";
 
 const Navbar = () => {
-  const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [bgOpacity, setBgOpacity] = useState(0);
@@ -24,10 +23,6 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const toggleAccountMenu = useCallback(() => {
-    setShowAccountMenu((current) => !current);
   }, []);
 
   const toggleMobileMenu = useCallback(() => {
