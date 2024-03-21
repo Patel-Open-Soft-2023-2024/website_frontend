@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState,useRef } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 import PlayButton from '@/components/PlayButton';
 import FavoriteButton from '@/components/FavoriteButton';
 import useInfoModalStore from '@/hooks/useInfoModalStore';
 import useMovie from '@/hooks/useMovie';
+import useVideoStore from "@/hooks/useVideoStore";
 
 interface InfoModalProps {
   visible?: boolean;
@@ -13,20 +14,36 @@ interface InfoModalProps {
 
 const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
   const [isVisible, setIsVisible] = useState<boolean>(!!visible);
-
+  const {video:videoEl} =useVideoStore();
+  const videoRef=useRef<HTMLVideoElement>(null);
   const { movieId } = useInfoModalStore();
   const { data = {} } = useMovie(movieId);
 
   useEffect(() => {
     setIsVisible(!!visible);
   }, [visible]);
+  
+  const discardVideo=async()=>{
+    if (videoRef!.current && data){
+      videoRef.current.pause();
+      videoEl?.play();
+    }
+  }
 
   const handleClose = useCallback(() => {
     setIsVisible(false);
+    discardVideo();
     setTimeout(() => {
       onClose();
     }, 300);
-  }, [onClose]);
+  }, [onClose,discardVideo]);
+
+  useEffect(()=>{
+    if (isVisible && videoRef!.current && data){
+      videoEl && videoEl.pause();
+      videoRef.current.play();
+    }
+  },[isVisible,videoRef,data])
 
   if (!visible) {
     return null;
@@ -38,7 +55,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
         <div className={`${isVisible ? 'scale-100' : 'scale-0'} transform duration-300 relative flex-auto bg-zinc-900 drop-shadow-md`}>
 
           <div className="relative h-96">
-            <video poster={data?.thumbnailUrl} autoPlay muted loop src={data?.videoUrl} className="w-full brightness-[60%] object-cover h-full" />
+            <video ref={videoRef} poster={data?.thumbnailUrl} loop src={data?.videoUrl} className="w-full brightness-[60%] object-cover h-full" />
             <div onClick={handleClose} className="cursor-pointer absolute top-3 right-3 h-10 w-10 rounded-full bg-black bg-opacity-70 flex items-center justify-center">
               <XMarkIcon className="text-white w-6" />
             </div>

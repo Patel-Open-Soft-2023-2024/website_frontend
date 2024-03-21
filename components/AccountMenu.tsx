@@ -35,7 +35,7 @@ const Account: React.FC<AccountProps> = ({}) => {
     <div className="relative inline-block text-left" >
       {/* Account Image and Chevron Icon */}
       <button onMouseEnter={toggleMenu} onClick={toggleMenu} className="flex items-center cursor-pointer space-x-2">
-        <Image src="/images/default-blue.png" alt="Account" width={32} height={32} className="rounded-sm" />
+        <Image src="/images/default-blue.png" alt="Account" width={32} height={32} className="rounded-sm" priority />
         <ChevronDownIcon className={`w-5 h-5 text-white transition-transform ${isOpen?"rotate-180":""}`} />
       </button>
 

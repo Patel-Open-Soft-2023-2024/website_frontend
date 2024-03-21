@@ -2,7 +2,7 @@ import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app'
 
 import '../styles/globals.css';
-import "@/components/Nav.css";
+import "@/components/Navbar.css";
 
 export default function App({ 
   Component, 
