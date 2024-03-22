@@ -1,4 +1,4 @@
-//use-client
+'use client'
 import { useState, useEffect,useRef } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { CSSTransition } from 'react-transition-group';

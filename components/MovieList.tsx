@@ -1,7 +1,12 @@
-import React,{useEffect, useState} from 'react';
+'use client'
+import React,{useEffect, useRef, useState} from 'react';
 import { MovieInterface } from '@/types';
 import MovieCard from '@/components/MovieCard';
 import { isEmpty } from 'lodash';
+import {
+  CSSTransition,
+  TransitionGroup,
+} from 'react-transition-group';
 
 interface MovieListProps {
   data: MovieInterface[];
@@ -9,7 +14,7 @@ interface MovieListProps {
 }
 
 const useBreakPoints=()=>{
-  const breakPoint=()=>[320,480,840,924,1250,1536].reduce((bp,b)=> innerWidth>b?bp+1:bp,0);
+  const breakPoint=()=>[320,480,840,924,1250,1536].reduce((bp,b)=> window.innerWidth>b?bp+1:bp,0);
   const [count,setCount]=useState(breakPoint());
   useEffect(()=>{
     const setDynamicCount=()=> setCount(breakPoint());
@@ -22,25 +27,40 @@ const useBreakPoints=()=>{
 const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
   if (isEmpty(data)) {
     return null;
-  }
+  } ``
+  const rowRef=useRef<HTMLDivElement>(null);
   const totalCount=data.length;
   const [page,setPage]=useState(1);
   const pageSize=useBreakPoints();
+
   return (
     <div className="px-12 mt-4 space-y-8">
         <p className="text-white text-md md:text-xl lg:text-2xl font-semibold mb-4">{title}</p>
-        <div className="relative grid gap-2" style={{gridTemplateColumns:`repeat(${pageSize},1fr)`}}
+        <TransitionGroup>
+        <CSSTransition in={page%2==0} timeout={500} classNames="slide" nodeRef={rowRef}>
+        <div 
+          className="relative grid gap-2" 
+          style={{gridTemplateColumns:`repeat(${pageSize},1fr)`}}
+          ref={rowRef}
         >
           {page>1 && (
-          <span onClick={()=>setPage(page-1)} className="absolute left-0 -translate-x-full bg-white rounded-md bg-opacity-20 w-20 h-full z-20" tabIndex={0} role="button" aria-label="See more titles"><b className="indicator-icon icon-rightCaret"></b></span>
+            <span onClick={()=>setPage(page-1)} className="absolute -left-2 -translate-x-full h-full" tabIndex={0} role="button" aria-label="See more titles">
+            <img className="w-full h-full aspect-[4/3] object-cover transition delay-[500ms] duration-[200ms] opacity-100 group-hover:opacity-0 rounded-sm" alt="Movie" src={data[(page-1)*pageSize-1]?.thumbnailUrl}></img>
+            <button className="absolute top-0 w-full h-full bg-white rounded-md bg-opacity-20 z-20"></button>
+          </span>
           )}
-          {data.slice((page-1)*pageSize,(page)*pageSize).map((movie,i) => (
-            <MovieCard key={movie.id} data={movie} align={i==pageSize-1?"origin-bottom-right":i==0?"origin-bottom-left":"origin-bottom"} />
-          ))}
+            {data.slice((page-1)*pageSize,page*pageSize).map((movie,i) => (
+              <MovieCard key={movie.id} data={movie} align={i==pageSize-1?"origin-bottom-right":i==0?"origin-bottom-left":"origin-bottom"} />
+            ))}
           {(page*pageSize<totalCount) &&(
-            <span onClick={()=>setPage(page+1)} className="absolute right-0 translate-x-full bg-white rounded-md bg-opacity-20 w-20 h-full z-20" tabIndex={0} role="button" aria-label="See more titles"><b className="indicator-icon icon-rightCaret"></b></span>
+            <span onClick={()=>setPage(page+1)} className="absolute -right-2 translate-x-full h-full" tabIndex={0} role="button" aria-label="See more titles">
+              <img className="w-full h-full aspect-[4/3] object-cover transition delay-[500ms] duration-[200ms] opacity-100 group-hover:opacity-0 rounded-sm" alt="Movie" src={data[page*pageSize]?.thumbnailUrl}></img>
+              <button className="absolute top-0 w-full h-full bg-white rounded-md bg-opacity-20 z-20"></button>
+            </span>
           )}
         </div>
+        </CSSTransition>
+        </TransitionGroup>
     </div>
   );
 }
