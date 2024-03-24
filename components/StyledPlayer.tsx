@@ -14,7 +14,6 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
 
     const [levels, setLevels] = React.useState([]);
     const [currentLevel, setCurrentLevel] = React.useState<number>(NaN);
-    const [man, setMan] = React.useState(0);
 
     //@ts-ignore
     const onChangeBitrate = (event) => {
@@ -22,13 +21,16 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
         const internalPlayer = playerRef.current?.getInternalPlayer('hls');
         if (internalPlayer) {
             // currentLevel expect to receive an index of the levels array
-            console.log("change bitrate", event.target.value);
-            internalPlayer.currentLevel = event.target.value;
+            const newBitRate=event.target.value;
+            // console.log({newBitRate},internalPlayer)
+            if(newBitRate>=0)
+                internalPlayer.currentLevel  = newBitRate;
+            else{
+                internalPlayer.levelController.manualLevelIndex = -1
+            }
             // do smooth quality transition with hls.js
             // internalPlayer.nextLevel = event.target.value;
-            console.log(internalPlayer);
-            setCurrentLevel(event.target.value);
-            setMan(1);
+            setCurrentLevel(newBitRate);
             // internalPlayer.currentLevel = event.target.value;
         }
     }
@@ -37,13 +39,10 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
         // console.log({quality});
           //@ts-ignore
         const internalPlayer = playerRef.current?.getInternalPlayer('hls');
-        if (internalPlayer) {
-            // currentLevel expect to receive an index of the levels array
-            if (man)
-                setCurrentLevel(internalPlayer.nextLevel);
-            else
-                setCurrentLevel(internalPlayer.currentLevel);
-        }
+        const currentLevel=internalPlayer?.currentLevel;
+        // const currentLevel=internalPlayer?.currentLevel;
+        // console.log(internalPlayer,"current bitrate",{currentLevel});
+        currentLevel && setCurrentLevel(currentLevel);
         if(playerRef.current){
             const frac=playerRef.current.getCurrentTime()/playerRef.current.getDuration();
             setDuration(playerRef.current.getDuration());
@@ -55,11 +54,14 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
         //@ts-ignore
         const internalPlayer = playerRef.current?.getInternalPlayer('hls');
         // console.log({internalPlayer});
-        console.log("ready")
+        // console.log("ready");
+        // console.log("current bitrate",internalPlayer?.levelController.manualLevelIndex);
         if (internalPlayer) {
             // currentLevel expect to receive an index of the levels array
             setLevels(internalPlayer.levels);
-            console.log({ L: internalPlayer.levels })
+            // internalPlayer.currentLevel = 0;
+            // setCurrentLevel(0);
+            // console.log({ internalPlayer })
         }
     }
     
@@ -78,17 +80,16 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
     const [url, setUrl] = useState('');
     
     useEffect(() => {
-        console.log('loaded')
+        // console.log('loaded')
         setUrl(data?.videoUrl);
     }, []);
     
-    const isIdle = useIdle({timeToIdle: 2000})
+    const isIdle = useIdle({timeToIdle: 5000})
     
     const controlRef=useRef(null);
     const [showControls, setShowControls] = React.useState(false);
     
     useEffect(()=>{
-        console.log(isIdle);
         setShowControls(!isIdle);
     },[isIdle]);
 
@@ -114,6 +115,23 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
             </div>
         </div>
     );
+    const QualityControlComponent=(
+        <>
+        Quality:
+        {/* <div >{currentLevel}</div> */}
+        <select className="bg-black" onChange={onChangeBitrate} value={currentLevel}>
+            <option value={-1}>auto</option>
+            {/* @ts-ignore */}
+            {levels.toSorted((a,b)=>a.bitrate-b.bitrate).map(
+                (level, id) => 
+                <option key={id} value={id}>
+                    {/* @ts-ignore */}
+                    {level.height+"p"}
+                </option>
+            )}
+        </select>
+        </>
+    )
 
     return (
         <div className="fixed inset-0 object-cover">
@@ -184,24 +202,14 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
                         </button>
                         <h1 className="flex-1 font-bold text-2xl text-center">{data.title}</h1>
 
-                        Quality:
-                        <select className="bg-black" onChange={onChangeBitrate} defaultValue={currentLevel||"auto"}>
-                            <option disabled value="auto">auto</option>
-                            {levels.map(
-                                (level, id) => 
-                                <option key={id} value={id}>
-                                    {/* @ts-ignore */}
-                                    {level.bitrate}
-                                </option>
-                            )}
-                        </select>
+                        {QualityControlComponent}
 
                         Playback Rate:
                         <select className="bg-black"  onChange={(e)=>setPlaybackRate(Number(e.target.value))} defaultValue={playbackRate}>
                             {playbackRates.map(
                                 (rate, id) => 
                                 <option key={id} value={rate}>
-                                    {rate}
+                                    {rate}x
                                 </option>
                             )}
                         </select>
