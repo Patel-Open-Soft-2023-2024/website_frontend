@@ -60,3 +60,6 @@ transition: opacity 150ms ease-in;
   input[type=range] {
     filter:hue-rotate(120deg);
   }
+  select{
+    filter:hue-rotate(120deg);
+  }

@@ -34,6 +34,16 @@ const Search : React.FC<SearchProps> = ({
     history.pushState({}, "", url);
   },[searchQuery])
 
+  useEffect(()=>{
+    //update the search query
+    const url = new URL(location.href);
+    const query = url.searchParams.get("q");
+    if(showSearchBar && query){
+      setSearchQuery(query);
+      console.log(inputRef.current,query);
+      inputRef.current && (inputRef.current.getElementsByTagName("input")[0].value=query);
+    }
+  },[showSearchBar])
   return (
     <div className="relative">
       {/* Search Icon */}
@@ -57,7 +67,7 @@ const Search : React.FC<SearchProps> = ({
               type="text"
               placeholder="Titles, people, genres"
               className="flex-grow bg-transparent text-neutral-100 placeholder:text-neutral-500 pl-2 py-1 focus:outline-none"
-              onBlur={() => setShowSearchBar(false)}
+              onBlur={() => setShowSearchBar((searchQuery.length > 0))}
             />
           </div>
         </div>

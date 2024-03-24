@@ -19,7 +19,7 @@ const Billboard: React.FC = () => {
 
   return (
     <div className="relative h-[45vw]">
-      <video ref={videoRef} poster={data?.thumbnailUrl} className="w-full h-[52vw] object-cover brightness-[60%] mask-video-gradient" autoPlay muted={muted} loop src={data?.videoUrl}></video>
+      <video ref={videoRef} poster={data?.thumbnailUrl} className="w-full h-[52vw] object-cover brightness-[60%] mask-video-gradient" autoPlay muted={muted} loop src={"https://dge8ab9n7stt8.cloudfront.net/Video/preview_Road_House.mp4"||data?.videoUrl}></video>
       <div className="absolute bottom-[10%] md:bottom-[10%] ml-12">
         <p className="text-white text-1xl md:text-5xl h-full w-[50%] lg:text-7xl whitespace-nowrap font-bold drop-shadow-xl">
           {data?.title}

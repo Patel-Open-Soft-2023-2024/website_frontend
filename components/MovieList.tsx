@@ -7,6 +7,7 @@ import {
   CSSTransition,
   TransitionGroup,
 } from 'react-transition-group';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
 interface MovieListProps {
   data: MovieInterface[];
@@ -46,7 +47,9 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
           {page>1 && (
             <span onClick={()=>setPage(page-1)} className="absolute -left-2 -translate-x-full h-full" tabIndex={0} role="button" aria-label="See more titles">
             <img className="w-full h-full aspect-[4/3] object-cover transition delay-[500ms] duration-[200ms] opacity-100 group-hover:opacity-0 rounded-sm" alt="Movie" src={data[(page-1)*pageSize-1]?.thumbnailUrl}></img>
-            <button className="absolute top-0 w-full h-full bg-white rounded-md bg-opacity-20 z-20"></button>
+            <button className="absolute top-0 w-full h-full bg-black rounded-sm bg-opacity-50 z-20">
+              <ChevronLeftIcon className='absolute right-0 -translate-y-1/2 w-12 h-12 text-white'/>
+            </button>
           </span>
           )}
             {data.slice((page-1)*pageSize,page*pageSize).map((movie,i) => (
@@ -55,7 +58,9 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
           {(page*pageSize<totalCount) &&(
             <span onClick={()=>setPage(page+1)} className="absolute -right-2 translate-x-full h-full" tabIndex={0} role="button" aria-label="See more titles">
               <img className="w-full h-full aspect-[4/3] object-cover transition delay-[500ms] duration-[200ms] opacity-100 group-hover:opacity-0 rounded-sm" alt="Movie" src={data[page*pageSize]?.thumbnailUrl}></img>
-              <button className="absolute top-0 w-full h-full bg-white rounded-md bg-opacity-20 z-20"></button>
+              <button className="absolute top-0 w-full h-full bg-black rounded-sm bg-opacity-50 z-20">
+                <ChevronRightIcon  className='absolute left-0 -translate-y-1/2 w-12 h-12 text-white'/>
+              </button>
             </span>
           )}
         </div>
