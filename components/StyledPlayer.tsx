@@ -1,9 +1,9 @@
 'use client'
 import { Movie } from "@prisma/client";
-import React, { useRef, useEffect, useState } from "react"
+import React, { useRef, useEffect, useState, useCallback } from "react"
 import ReactPlayer from 'react-player';
 import { CSSTransition } from "react-transition-group";
-import { PauseIcon, PlayIcon ,SpeakerWaveIcon,SpeakerXMarkIcon} from "@heroicons/react/24/solid";
+import { AdjustmentsHorizontalIcon, PauseIcon, PlayIcon ,SpeakerWaveIcon,SpeakerXMarkIcon} from "@heroicons/react/24/solid";
 import useIdle from "@/hooks/useIdle";
 
 interface StyledPlayerProps{
@@ -12,62 +12,11 @@ interface StyledPlayerProps{
 const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
     const playerRef = useRef<ReactPlayer>(null);
 
-    const [levels, setLevels] = React.useState([]);
-    const [currentLevel, setCurrentLevel] = React.useState<number>(NaN);
-
-    //@ts-ignore
-    const onChangeBitrate = (event) => {
-        //@ts-ignore
-        const internalPlayer = playerRef.current?.getInternalPlayer('hls');
-        if (internalPlayer) {
-            // currentLevel expect to receive an index of the levels array
-            const newBitRate=event.target.value;
-            // console.log({newBitRate},internalPlayer)
-            if(newBitRate>=0)
-                internalPlayer.currentLevel  = newBitRate;
-            else{
-                internalPlayer.levelController.manualLevelIndex = -1
-            }
-            // do smooth quality transition with hls.js
-            // internalPlayer.nextLevel = event.target.value;
-            setCurrentLevel(newBitRate);
-            // internalPlayer.currentLevel = event.target.value;
-        }
-    }
-      //@ts-ignore
-    const handleProgress = (quality) => {
-        // console.log({quality});
-          //@ts-ignore
-        const internalPlayer = playerRef.current?.getInternalPlayer('hls');
-        const currentLevel=internalPlayer?.currentLevel;
-        // const currentLevel=internalPlayer?.currentLevel;
-        // console.log(internalPlayer,"current bitrate",{currentLevel});
-        currentLevel && setCurrentLevel(currentLevel);
-        if(playerRef.current){
-            const frac=playerRef.current.getCurrentTime()/playerRef.current.getDuration();
-            setDuration(playerRef.current.getDuration());
-            setProgress(frac);
-        }
-    }
-
-    const handleLoad = () => {
-        //@ts-ignore
-        const internalPlayer = playerRef.current?.getInternalPlayer('hls');
-        // console.log({internalPlayer});
-        // console.log("ready");
-        // console.log("current bitrate",internalPlayer?.levelController.manualLevelIndex);
-        if (internalPlayer) {
-            // currentLevel expect to receive an index of the levels array
-            setLevels(internalPlayer.levels);
-            // internalPlayer.currentLevel = 0;
-            // setCurrentLevel(0);
-            // console.log({ internalPlayer })
-        }
-    }
-    
-    //Styles
-    
     //Controls
+    
+    const [levels, setLevels] = React.useState([]);
+    const [currentLevel, setCurrentLevel] = React.useState<number>(-1);
+    const [auto,setAuto]=useState(true);
     const progressRef = useRef<HTMLInputElement>(null);
     const [progress,setProgress]=useState(0);
     const [duration,setDuration]=useState(0);
@@ -78,20 +27,68 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
     const [playbackRate,setPlaybackRate]=useState(1);
     
     const [url, setUrl] = useState('');
+    const selectRef=useRef<HTMLSelectElement>(null);
+
+    const handleLoad = () => {
+        const internalPlayer = playerRef.current?.getInternalPlayer('hls');
+        if (internalPlayer) setLevels(internalPlayer.levels);   
+    }
+
+    const onChangeBitrate = () => {
+        const newBitRate=Number(selectRef.current?.value);
+        const internalPlayer = playerRef.current?.getInternalPlayer('hls');
+        if (newBitRate && internalPlayer) {
+            if(newBitRate>=0){
+                setAuto(false);    
+                internalPlayer.currentLevel  = newBitRate;
+            }
+            else{
+                setAuto(true);
+                internalPlayer.levelController.manualLevelIndex = -1
+            }
+            // do smooth quality transition with hls.js
+            // internalPlayer.nextLevel = event.target.value;
+            setCurrentLevel(newBitRate);
+        }
+    }
+
+    const handleProgress = useCallback(() => {
+        const internalPlayer = playerRef.current?.getInternalPlayer('hls');
+        const currentLevel=internalPlayer?.currentLevel;
+        // const currentLevel=internalPlayer?.currentLevel;
+        // console.log(internalPlayer,"current bitrate",{currentLevel},{auto});
+        !auto && currentLevel && setCurrentLevel(currentLevel);
+        if(playerRef.current){
+            const frac=playerRef.current.getCurrentTime()/playerRef.current.getDuration();
+            setDuration(playerRef.current.getDuration());
+            setProgress(frac);
+        }
+    },[playerRef]);
     
     useEffect(() => {
         // console.log('loaded')
         setUrl(data?.videoUrl);
     }, []);
     
-    const isIdle = useIdle({timeToIdle: 5000})
+    const isIdle = useIdle({timeToIdle: 5000,ignoredEventsWhenIdle:[]})
     
     const controlRef=useRef(null);
     const [showControls, setShowControls] = React.useState(false);
-    
+
     useEffect(()=>{
         setShowControls(!isIdle);
     },[isIdle]);
+
+    const HMSTime=(time:number)=> {
+        const h = Math.floor(time / 3600);
+        const m = Math.floor(time % 3600 / 60);
+        const s = Math.floor(time % 3600 % 60);
+        let result = '';
+        result+=h>0?String(h).padStart(2,"0")+":":'';
+        result+=String(m).padStart(2,"0")+":";
+        result+=String(s).padStart(2,"0")
+        return result;
+    }
 
     const [showBuffering, setShowBuffering] = React.useState(false);
     
@@ -116,21 +113,36 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
         </div>
     );
     const QualityControlComponent=(
-        <>
-        Quality:
-        {/* <div >{currentLevel}</div> */}
-        <select className="bg-black" onChange={onChangeBitrate} value={currentLevel}>
-            <option value={-1}>auto</option>
-            {/* @ts-ignore */}
-            {levels.toSorted((a,b)=>a.bitrate-b.bitrate).map(
-                (level, id) => 
-                <option key={id} value={id}>
-                    {/* @ts-ignore */}
-                    {level.height+"p"}
-                </option>
-            )}
-        </select>
-        </>
+        <div className="text-neutral-400">
+            {/* <div >{currentLevel}</div> */}
+            Quality
+            <select ref={selectRef} className=" text-white bg-black ml-1" onChange={onChangeBitrate} value={currentLevel}>
+                <option value={-1}>auto</option>
+                {/* @ts-ignore */}
+                {levels.toSorted((a,b)=>a.bitrate-b.bitrate).map(
+                    (level, id) => 
+                    <option key={id} value={id}>
+                        {/* @ts-ignore */}
+                        {level.height+"p"}
+                    </option>
+                )}
+            </select>
+        </div>
+    )
+
+    const PlayBackRateControlComponent=(
+        <div className="text-neutral-400">
+        {/* <AdjustmentsHorizontalIcon className="w-10 h-10 text-white"/> */}
+            PlayBack Rate
+            <select className="text-white bg-black ml-1"  onChange={(e)=>setPlaybackRate(Number(e.target.value))} defaultValue={playbackRate}>
+                {playbackRates.map(
+                    (rate, id) => 
+                    <option key={id} value={rate}>
+                        {rate}x
+                    </option>
+                )}
+            </select>
+        </div>
     )
 
     return (
@@ -171,6 +183,7 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
                     onProgress={handleProgress}
                     ref={playerRef}
                 />
+                <span onClick={()=>setPlaying(!playing)} className="fixed inset-0 w-full h-full z-10" />
                 <CSSTransition
                     in={showControls}
                     delay={2000}
@@ -179,41 +192,32 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
                     unmountOnExit
                     nodeRef={controlRef}
                 >
-                <div ref={controlRef} className="absolute w-full p-4 bottom-8 text-white">
+                <div ref={controlRef} className="absolute w-full p-4 pb-2 bottom-0 text-white z-30">
                     <div className="flex items-center inset-x-0 gap-2">
+                        <span className="flex-0 w-[40px] text-left">{HMSTime(progress*duration)}</span>
                         <input className="flex-1" onInput={(e)=>progressRef.current && setProgress(Number(progressRef.current.value))} onChange={(e)=>playerRef.current && playerRef.current.seekTo(Number(e.target.value))} 
                         ref={progressRef} step={0.001} min={0} max={1} type="range" value={progress}/>
-                        <span className="flex-0">{duration}</span>
+                        <span className="flex-0 w-[40px] text-left">{HMSTime(duration)}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-lg">
-                        <button className="w-[50px]" onClick={()=>setPlaying(!playing)}>
+                    <div className="flex items-center gap-4 text-xl">
+                        <button className="w-[50px] grid place-items-center" onClick={()=>setPlaying(!playing)}>
                             {
                                 playing?
-                                <PauseIcon className="w-10  text-white"/>:
-                                <PlayIcon className="w-10 text-white" />
+                                <PauseIcon className="w-10 h-10  text-white"/>:
+                                <PlayIcon className="w-10 h-10 text-white" />
                             }
                         </button>
-                        <button className="w-[50px]" onClick={()=>setMuted(!muted)}>
+                        <button className="w-[50px] grid place-items-center" onClick={()=>setMuted(!muted)}>
                             {
                                 muted?
-                                <SpeakerXMarkIcon className="w-10 text-white" />:
-                                <SpeakerWaveIcon className="w-10 text-white"/>
+                                <SpeakerXMarkIcon className="w-10 h-10 text-white" />:
+                                <SpeakerWaveIcon className="w-10 h-10 text-white"/>
                             }
                         </button>
-                        <h1 className="flex-1 font-bold text-2xl text-center">{data.title}</h1>
+                        <h1 className="flex-1 font-bolder  text-2xl text-center">{data.title}</h1>
 
                         {QualityControlComponent}
-
-                        Playback Rate:
-                        <select className="bg-black"  onChange={(e)=>setPlaybackRate(Number(e.target.value))} defaultValue={playbackRate}>
-                            {playbackRates.map(
-                                (rate, id) => 
-                                <option key={id} value={rate}>
-                                    {rate}x
-                                </option>
-                            )}
-                        </select>
-
+                        {PlayBackRateControlComponent}
                         {/* <span>{progress}</span> */}
                     </div>
                 </div>
