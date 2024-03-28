@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import useSwr from 'swr'
 import fetcher from '@/libs/fetcher';
-import { Autocomplete, DiverseSearch, SemanticSearch } from '@/types';
+import { Movie, } from '@/types';
 
 export interface SearchStoreInterface{
     query:string;
@@ -9,7 +9,7 @@ export interface SearchStoreInterface{
     setQuery:(query:string)=>void;
 }
 
-let timeout=null;
+let timeout:NodeJS.Timeout|null=null;
 const useSearchStore = create<SearchStoreInterface>((set) => ({
     query :"",
     deepQuery:"",
@@ -27,7 +27,7 @@ export const useAutoComplete= (query:string)=>{
         revalidateOnReconnect: false,
       });
       return {
-        data :data as Autocomplete[],
+        data :data as Movie[],
         error,
         isLoading
       }
@@ -39,7 +39,7 @@ export const useDiverseSearch= (query:string)=>{
         revalidateOnReconnect: false,
       });
       return {
-        data :data as DiverseSearch[],
+        data :data as Movie[],
         error,
         isLoading
       }
@@ -51,7 +51,7 @@ export const useDeepSearch= (query:string)=>{
         revalidateOnReconnect: false,
       });
       return {
-        data :data as SemanticSearch[],
+        data :data as Movie[],
         error,
         isLoading
       }

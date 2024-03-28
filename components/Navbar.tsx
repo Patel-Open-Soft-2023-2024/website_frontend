@@ -9,8 +9,10 @@ import MobileMenu from "@/components/MobileMenu";
 import NavbarItem from "@/components/NavbarItem";
 import Search from "@/components/Search";
 import useSearchStore from "@/hooks/useSearchStore";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
+  const router=useRouter();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [bgOpacity, setBgOpacity] = useState(0);
@@ -43,7 +45,7 @@ const Navbar = () => {
           <NavbarItem label="Series" />
           <NavbarItem label="Films" />
           <NavbarItem label="New & Popular" />
-          <NavbarItem label="My List" />
+          <NavbarItem label="Plans" link="/plans" />
           <NavbarItem label="Browse by Languages" />
         </div>
         <div

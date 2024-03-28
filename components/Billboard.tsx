@@ -14,7 +14,7 @@ const Billboard: React.FC = () => {
   const handleOpenModal = useCallback(() => {
     openModal(movie?._id);
   }, [openModal, movie?._id]);
-  
+
   useEffect(()=> {videoRef!.current && movie && setVideo(videoRef.current,movie.title)},[videoRef,movie])
 
   return (

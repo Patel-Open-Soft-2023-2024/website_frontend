@@ -1,6 +1,6 @@
 'use client'
 import React,{useEffect, useRef, useState} from 'react';
-import { Movie } from '@/types';
+import { Autocomplete, DiverseSearch, Movie, SemanticSearch } from '@/types';
 import useMovieList from '@/hooks/useMovieList';
 import MovieCard from '@/components/MovieCard';
 import {
@@ -9,9 +9,9 @@ import {
 } from 'react-transition-group';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
-interface MovieListProps {
+interface SearchResultListProps {
   title: string;
-  data: 
+  data: Movie[]
 }
 
 // const useBreakPoints=()=>{
@@ -25,8 +25,7 @@ interface MovieListProps {
 //   return count;
 // }
 
-const SearchResultList: React.FC<MovieListProps> = ({title }) => {
-  const { data } = useMovieList(title);
+const SearchResultList: React.FC<SearchResultListProps> = ({title,data }) => {
   const rowRef=useRef<HTMLDivElement>(null);
   if(!data) return null;
   return (
@@ -44,4 +43,4 @@ const SearchResultList: React.FC<MovieListProps> = ({title }) => {
   );
 }
 
-export default MovieList;
+export default SearchResultList;

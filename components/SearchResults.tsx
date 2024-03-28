@@ -7,6 +7,7 @@ import {
   TransitionGroup,
 } from 'react-transition-group';
 import useSearchStore, { useAutoComplete, useDeepSearch, useDiverseSearch } from '@/hooks/useSearchStore';
+import SearchResultList from './SearchResultList';
 
 
 // const useBreakPoints=()=>{
@@ -28,7 +29,10 @@ const deepSearchResults = useDeepSearch(deepQuery);
 if(!autocompleteResults) return null;
   return (
     <div className="pt-[300px] text-white mt-50">
-        {autocompleteResults.data?.map((result)=><div>{result.title}</div>)}
+        {/* {autocompleteResults.data?.map((result)=><div>{result.title}</div>)} */}
+        <SearchResultList title={"autocomplete"} data={autocompleteResults.data} />
+        <div>---------------</div>
+        {deepSearchResults.data?.map((result)=><div>{result.title}</div>)}
     </div>
   );
 }
