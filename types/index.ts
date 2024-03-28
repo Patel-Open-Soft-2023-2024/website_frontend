@@ -56,3 +56,50 @@ export interface Critic {
 }
 
 
+
+export interface Autocomplete {
+  _id:             string;
+  plot:            string;
+  poster:          string;
+  title:           string;
+  score:           number;
+  previewLink:     string;
+  alternatePoster: string;
+}
+
+
+export interface DiverseSearch {
+  _id:             string;
+  poster:          string;
+  title:           string;
+  languages:       string[];
+  year:            number;
+  imdb:            Imdb;
+  previewLink:     string;
+  alternatePoster: string;
+}
+
+
+export interface SemanticSearch {
+  _id:             string;
+  imdb:            Imdb;
+  year:            number;
+  title:           string;
+  languages:       string[];
+  poster?:         string;
+  previewLink:     string;
+  alternatePoster: string;
+}
+
+export interface Imdb {
+  rating: number;
+  votes:  number;
+  id:     number;
+}
+
+
+
+
+
+
+
