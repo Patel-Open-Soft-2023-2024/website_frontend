@@ -5,17 +5,7 @@ import { useCallback } from "react";
 import {CheckIcon} from '@heroicons/react/24/solid'
 
 import useCurrentUser from "@/hooks/useCurrentUser";
-
-const images = [
-  '/images/default-blue.png',
-  '/images/default-red.png',
-  '/images/default-slate.png',
-  '/images/default-green.png'
-]
-
-interface UserCardProps {
-  name: string;
-}
+import axios from "axios";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -34,36 +24,29 @@ export async function getServerSideProps(context: NextPageContext) {
   }
 }
 
-const UserCard: React.FC<UserCardProps> = ({ name }) => {
-  const imgSrc = images[Math.floor(Math.random() * 4)];
-
-  return (
-    <div className="group flex-row w-44 mx-auto">
-        <div className="w-44 h-44 rounded-md flex items-center justify-center border-2 border-transparent group-hover:cursor-pointer group-hover:border-white overflow-hidden">
-          <img draggable={false} className="w-max h-max object-contain" src={imgSrc} alt="" />
-        </div>
-      <div className="mt-4 text-gray-400 text-2xl text-center group-hover:text-white">{name}</div>
-   </div>
-  );
-}
 
 const App = () => {
   const router = useRouter();
   const { data: currentUser } = useCurrentUser();
-  const onPlanSelected = useCallback(() => {
-    router.push('/payment');
+  const onPlanSelected = useCallback(async(id:string) => {
+    try{
+      const res=await axios.post("/api/subscribe",{id});
+      res.data.url && router.push(res.data.url);
+    }catch(e:any){
+      console.error(e.error)
+    }
   }, [router]);
 
   const plans =[
-    {name: "Basic", price: "Rs 59", benefits: ["Standard Definition (SD)","1 screen"]},
-    {name: "Standard", price: "Rs 199", benefits: ["High Definition (HD)","2 screens"]},
-    {name: "Premium", price: "Rs 349", benefits: ["Ultra High Definition (UHD)","4 screens"]},
+    {id:"basic" ,name: "Basic", price: "Rs 59", benefits: ["Standard Definition (SD)","1 screen"]},
+    {id:"standard", name: "Standard", price: "Rs 199", benefits: ["High Definition (HD)","2 screens"]},
+    {id:"premium", name: "Premium", price: "Rs 349", benefits: ["Ultra High Definition (UHD)","4 screens"]},
   ]
 
   const PlansComponent= 
       <div className="mx-6 grid grid-cols-3 items-center justify-center gap-8 mt-10">
         {plans.map((data, index) => (
-            <div  key={index} className="relative p-6 bg-white border border-neutral-500 group h-full rounded-2xl lg:hover:-translate-y-6 ease-in duration-300 hover:bg-black hover:text-white">
+            <div  key={data.id} className="relative p-6 bg-white border border-neutral-500 group h-full rounded-2xl lg:hover:-translate-y-6 ease-in duration-300 hover:bg-black hover:text-white">
               <div className="flex flex-row gap-5 items-center">
                 <span className="text-3xl font-bold">{data.name}</span>
               </div>
@@ -87,7 +70,7 @@ const App = () => {
                   <div className="flex justify-start items-baseline">
                     <span className="text-[32px] font-bold ">{data.price}</span>
                   </div>
-                  <button className="w-full px-4 py-3 bg-red-500 text-white rounded-xl mt-6 font-semibold text-xl">
+                  <button onClick={()=>onPlanSelected(data.id)} className="w-full px-4 py-3 bg-red-500 text-white rounded-xl mt-6 font-semibold text-xl">
                     Choose
                   </button>
                 </div>

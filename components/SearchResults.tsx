@@ -28,11 +28,9 @@ const diverseSearchResults = useDiverseSearch(query);
 const deepSearchResults = useDeepSearch(deepQuery);
 if(!autocompleteResults) return null;
   return (
-    <div className="pt-[300px] text-white mt-50">
-        {/* {autocompleteResults.data?.map((result)=><div>{result.title}</div>)} */}
+    <div className="text-white pt-40">
         <SearchResultList title={"autocomplete"} data={autocompleteResults.data} />
-        <div>---------------</div>
-        {deepSearchResults.data?.map((result)=><div>{result.title}</div>)}
+        <SearchResultList title={"deep "} data={deepSearchResults.data} />
     </div>
   );
 }
