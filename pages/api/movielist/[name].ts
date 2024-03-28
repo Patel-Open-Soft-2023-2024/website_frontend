@@ -10,17 +10,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await serverAuth(req, res);
 
-    const { movieId } = req.query;
+    const { name } = req.query;
 
-    if (typeof movieId !== 'string') {
-      throw new Error('Invalid Id');
+    if (typeof name !== 'string') {
+      throw new Error('Invalid name');
     }
 
-    if (!movieId) {
-      throw new Error('Missing Id');
+    if (!name) {
+      throw new Error('Missing name');
     }
-    const movie=await axiosMainServerInstance.get(`/movie/${movieId}`);
-    return res.status(200).json(movie.data.data[0]);
+    const movie=await axiosMainServerInstance.get(`/section/${name}`);
+    return res.status(200).json(movie.data);
   } catch (error) {
     console.log(error);
     return res.status(500).end();

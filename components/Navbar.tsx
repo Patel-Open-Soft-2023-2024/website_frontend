@@ -8,12 +8,12 @@ import AccountMenu from "@/components/AccountMenu";
 import MobileMenu from "@/components/MobileMenu";
 import NavbarItem from "@/components/NavbarItem";
 import Search from "@/components/Search";
+import useSearchStore from "@/hooks/useSearchStore";
 
 const Navbar = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [bgOpacity, setBgOpacity] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
     const handleScroll = () => {
       // Adjust the scroll threshold and opacity values as needed
@@ -60,8 +60,6 @@ const Navbar = () => {
         </div>
         <div className="flex flex-row ml-auto gap-7 items-center">
           <Search
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
             showSearchBar={showSearchBar}
             setShowSearchBar={setShowSearchBar}
           />

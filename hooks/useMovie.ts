@@ -8,8 +8,6 @@ const useMovie = (id?: string) => {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
-  console.log(data);
-
   return {
     data:data as Movie,
     error,

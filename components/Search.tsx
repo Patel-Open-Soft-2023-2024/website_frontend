@@ -2,20 +2,18 @@
 import { useState, useEffect,useRef } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { CSSTransition } from 'react-transition-group';
+import useSearchStore from '@/hooks/useSearchStore';
 
 interface SearchProps {
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
   showSearchBar: boolean;
   setShowSearchBar: (show: boolean) => void;
 }
 
 const Search : React.FC<SearchProps> = ({
-  searchQuery,
-  setSearchQuery,
   showSearchBar,
   setShowSearchBar,
 }) => {
+  const {query:searchQuery, setQuery:setSearchQuery} = useSearchStore();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -26,24 +24,25 @@ const Search : React.FC<SearchProps> = ({
   }, [showSearchBar]);
 
   useEffect(()=>{
-    //update the page link
-    const url = new URL(location.href);
-    url.searchParams.delete("q");
-    if(searchQuery)
-      url.searchParams.set("q", searchQuery);
-    history.pushState({}, "", url);
-  },[searchQuery])
-
-  useEffect(()=>{
     //update the search query
     const url = new URL(location.href);
     const query = url.searchParams.get("q");
     if(showSearchBar && query){
       setSearchQuery(query);
-      console.log(inputRef.current,query);
       inputRef.current && (inputRef.current.getElementsByTagName("input")[0].value=query);
     }
   },[showSearchBar])
+
+  useEffect(()=>{
+    //update the page link
+    const url = new URL(location.href);
+    url.searchParams.delete("q");
+    if(searchQuery){
+      url.searchParams.set("q", searchQuery);
+    }
+    history.pushState({}, "", url);
+  },[searchQuery])
+  
   return (
     <div className="relative">
       {/* Search Icon */}

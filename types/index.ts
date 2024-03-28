@@ -14,6 +14,7 @@ export interface Movie {
   type:             string;
   tomatoes:         Tomatoes;
   poster:           string;
+  alternatePoster:  string;
   numMflixComments: number;
   released:         Date;
   awards:           Awards;

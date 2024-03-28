@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import prismadb from '@/libs/prismadb';
+import {axiosMainServerInstance} from "@/libs/axiosInstance";
 import serverAuth from "@/libs/serverAuth";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await serverAuth(req, res);
 
-    const movies = await prismadb.movie.findMany();
+    const movies = await axiosMainServerInstance.get('section/');
 
     return res.status(200).json(movies);
   } catch (error) {

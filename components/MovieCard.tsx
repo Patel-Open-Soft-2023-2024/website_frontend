@@ -65,8 +65,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
    
   return (
     <div className="group bg-zinc-900 col-span relative">
-      <img onMouseEnter={loadVideo} className="w-full aspect-[4/3] object-cover transition delay-[500ms] duration-[200ms] opacity-100 group-hover:opacity-0 rounded-sm" alt="Movie" src={data?.poster}></img>
-      <div onMouseLeave={discardVideo} className={`absolute top-0 left-0 z-10 opacity-0 pointer-events-none invisible sm:visible w-full scale-100 group-hover:-translate-y-[10vh] group-hover:pointer-events-auto group-hover:scale-[1.25] group-hover:opacity-100 transition delay-[500ms] duration-[300ms] ${align}`}>
+        <img
+          onMouseEnter={loadVideo} className="w-full aspect-[4/3] object-cover transition delay-[500ms] duration-[200ms] opacity-100 group-hover:opacity-0 rounded-md bg-neutral-700" src={data.poster} alt={data.title}/>
+        <div onMouseLeave={discardVideo} className={`absolute top-0 left-0 z-10 opacity-0 pointer-events-none invisible sm:visible w-full scale-100 group-hover:-translate-y-[10vh] group-hover:pointer-events-auto group-hover:scale-[1.25] group-hover:opacity-100 transition delay-[500ms] duration-[300ms] ${align}`}>
         <video onClick={redirectToWatch} ref={videoRef} poster={data?.poster} className="w-full aspect-[4/3] object-cover rounded-t-md cursor-pointer" loop src={data?.previewLink} preload="none"></video>
         <div className="z-10 bg-neutral-800 p-2 lg:p-4 absolute w-full shadow-md rounded-b-md">
           {info}
