@@ -8,27 +8,27 @@ import useVideoStore from "@/hooks/useVideoStore";
 
 const Billboard: React.FC = () => {
   const { openModal } = useInfoModalStore();
-  const { data } = useBillboard();
+  const { data: movie } = useBillboard();
   const videoRef=useRef<HTMLVideoElement>(null);
   const {muted,setMuted,video:videoEl,setVideo} =useVideoStore();
   const handleOpenModal = useCallback(() => {
-    openModal(data?._id);
-  }, [openModal, data?._id]);
+    openModal(movie?._id);
+  }, [openModal, movie?._id]);
   
-  useEffect(()=> videoRef!.current && data && setVideo(videoRef.current,data.title),[videoRef,data])
+  useEffect(()=> {videoRef!.current && movie && setVideo(videoRef.current,movie.title)},[videoRef,movie])
 
   return (
     <div className="relative h-[45vw]">
-      <video ref={videoRef} poster={data?.poster} className="w-full h-[52vw] object-cover brightness-[60%] mask-video-gradient" autoPlay muted={muted} loop src={data?.previewLink}></video>
+      <video ref={videoRef} poster={movie?.poster} className="w-full h-[52vw] object-cover brightness-[60%] mask-video-gradient" autoPlay muted={muted} loop src={movie?.previewLink}></video>
       <div className="absolute bottom-[10%] md:bottom-[10%] ml-12">
         <p className="text-white text-1xl md:text-5xl h-full w-[50%] lg:text-7xl whitespace-nowrap font-bold drop-shadow-xl">
-          {data?.title}
+          {movie?.title}
         </p>
         <p className="text-white text-[8px] md:text-lg mt-3 md:mt-8 w-[90%] md:w-[80%] lg:w-[50%] drop-shadow-xl">
-          {data?.plot}
+          {movie?.plot}
         </p>
         <div className="flex flex-row items-center mt-3 md:mt-4 gap-3">
-          <PlayButton movieId={data?._id} />
+          <PlayButton movieId={movie?._id} />
           <button
             onClick={handleOpenModal}
             className="

@@ -1,5 +1,6 @@
 import useSwr from 'swr'
 import fetcher from '@/libs/fetcher';
+import { Movie } from '@/types';
 
 const useMovie = (id?: string) => {
   const { data, error, isLoading } = useSwr(id ? `/api/movies/${id}` : null, fetcher, {
@@ -8,10 +9,9 @@ const useMovie = (id?: string) => {
     revalidateOnReconnect: false,
   });
   console.log(data);
-  data && (data.previewLink = "https://dge8ab9n7stt8.cloudfront.net/Video/preview_Road_House.mp4")
 
   return {
-    data,
+    data:data as Movie,
     error,
     isLoading
   }

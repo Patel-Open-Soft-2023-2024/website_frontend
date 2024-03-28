@@ -5,10 +5,7 @@ import Image from 'next/image';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { CSSTransition } from 'react-transition-group';
 
-interface AccountProps {
-
-}
-const Account: React.FC<AccountProps> = ({}) => {
+const Account: React.FC = () => {
   const { data: currentUser } = useCurrentUser();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
