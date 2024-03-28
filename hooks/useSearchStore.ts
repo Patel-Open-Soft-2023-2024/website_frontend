@@ -1,24 +1,23 @@
 import { create } from 'zustand';
 import useSwr from 'swr'
 import fetcher from '@/libs/fetcher';
+import { Autocomplete, DiverseSearch, SemanticSearch } from '@/types';
 
 export interface SearchStoreInterface{
     query:string;
     deepQuery:string;
-    setDeepQuery:(query:string)=>void;
     setQuery:(query:string)=>void;
 }
 
-const timeout=null;
+let timeout=null;
 const useSearchStore = create<SearchStoreInterface>((set) => ({
     query :"",
     deepQuery:"",
     setQuery:(query:string)=>{
         set({query})
         timeout && clearTimeout(timeout);
-        setTimeout(()=>set({deepQuery:query}),300)
-    },
-    setDeepQuery:(deepQuery:string)=>set({deepQuery}),
+        timeout=setTimeout(()=>set({deepQuery:query}),300)
+    }
 }));
 
 export const useAutoComplete= (query:string)=>{
@@ -34,7 +33,7 @@ export const useAutoComplete= (query:string)=>{
       }
 }
 export const useDiverseSearch= (query:string)=>{
-    const { data, error, isLoading } = useSwr(`/api/search/fast/${query}`, fetcher, {
+    const { data, error, isLoading } = useSwr(`/api/search/diverse/${query}`, fetcher, {
         revalidateIfStale: false,
         revalidateOnFocus: false,
         revalidateOnReconnect: false,

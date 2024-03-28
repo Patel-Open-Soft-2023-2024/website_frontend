@@ -6,7 +6,7 @@ import {
   CSSTransition,
   TransitionGroup,
 } from 'react-transition-group';
-import useSearchStore, { useAutoComplete, useDeepSearch } from '@/hooks/useSearchStore';
+import useSearchStore, { useAutoComplete, useDeepSearch, useDiverseSearch } from '@/hooks/useSearchStore';
 
 
 // const useBreakPoints=()=>{
@@ -22,13 +22,13 @@ import useSearchStore, { useAutoComplete, useDeepSearch } from '@/hooks/useSearc
 
 const SearchResults: React.FC = () => {
 const {query,deepQuery} = useSearchStore();
-const searchResults = useAutoComplete(query);
-// const deepSearchResults = useDeepSearch(deepQuery);
-  if(!searchResults) return null;
+const autocompleteResults = useAutoComplete(query);
+const diverseSearchResults = useDiverseSearch(query);
+const deepSearchResults = useDeepSearch(deepQuery);
+if(!autocompleteResults) return null;
   return (
-    <div className="px-12 mt-4 space-y-8">
-        {query},{deepQuery}
-        {JSON.stringify(searchResults)}
+    <div className="pt-[300px] text-white mt-50">
+        {autocompleteResults.data?.map((result)=><div>{result.title}</div>)}
     </div>
   );
 }
