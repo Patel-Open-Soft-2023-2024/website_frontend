@@ -1,5 +1,5 @@
 export interface Movie {
-  _id:               string;
+  _id:              string;
   fullplot:         string;
   imdb:             Imdb;
   plot:             string;
@@ -7,18 +7,14 @@ export interface Movie {
   title:            string;
   languages:        string[];
   poster:           string;
-  alternatePoster:  string;
   cast:             string[];
   directors:        string[];
   runtime:          number;
   previewLink:      string;
+  alternatePoster:  string;
 }
 
-export interface Awards {
-  wins:        number;
-  nominations: number;
-  text:        string;
-}
+
 
 export interface Imdb {
   rating: number;
@@ -26,66 +22,19 @@ export interface Imdb {
   id:     number;
 }
 
-export interface Tomatoes {
-  website:     string;
-  viewer:      Critic;
-  dvd:         Date;
-  critic:      Critic;
-  boxOffice:   string;
-  consensus:   string;
-  rotten:      number;
-  production:  string;
-  lastUpdated: Date;
-  fresh:       number;
-}
 
-export interface Critic {
-  rating:     number;
-  numReviews: number;
-  meter:      number;
-}
+export type Autocomplete  = Movie;
 
-
-
-export interface Autocomplete {
-  _id:             string;
-  plot:            string;
-  poster:          string;
-  title:           string;
-  score:           number;
-  previewLink:     string;
-  alternatePoster: string;
-}
-
+export type SemanticSearch = Movie;
 
 export interface DiverseSearch {
-  _id:             string;
-  poster:          string;
-  title:           string;
-  languages:       string[];
-  year:            number;
-  imdb:            Imdb;
-  previewLink:     string;
-  alternatePoster: string;
+    title:     Movie[];
+    cast:      Movie[];
+    directors: Movie[];
+    genres:    Movie[];
 }
 
 
-export interface SemanticSearch {
-  _id:             string;
-  imdb:            Imdb;
-  year:            number;
-  title:           string;
-  languages:       string[];
-  poster?:         string;
-  previewLink:     string;
-  alternatePoster: string;
-}
-
-export interface Imdb {
-  rating: number;
-  votes:  number;
-  id:     number;
-}
 
 
 
