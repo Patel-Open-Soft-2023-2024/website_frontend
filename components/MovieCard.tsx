@@ -3,14 +3,14 @@ import { useRouter } from 'next/router';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { PlayIcon } from '@heroicons/react/24/solid';
 
-import { MovieInterface } from '@/types';
+import { Movie } from '@/types';
 import FavoriteButton from '@/components/FavoriteButton';
 import useInfoModalStore from '@/hooks/useInfoModalStore';
 import useVideoStore from "@/hooks/useVideoStore";
 import { CSSTransition } from 'react-transition-group';
 
 interface MovieCardProps {
-  data: MovieInterface;
+  data: Movie;
   align:string;
 }
 
@@ -21,7 +21,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
   const { openModal } = useInfoModalStore();
   const {video:videoEl} =useVideoStore();
 
-  const redirectToWatch = useCallback(() => router.push(`/watch/${data.id}`), [router, data.id]);
+  const redirectToWatch = useCallback(() => router.push(`/watch/${data._id}`), [router, data._id]);
   const loadVideo=async ()=>{
     const playVideo=( )=>{
       if (videoRef!.current && data){
@@ -46,8 +46,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
         <div onClick={redirectToWatch} className="cursor-pointer w-6 h-6 lg:w-10 lg:h-10 bg-white rounded-full flex justify-center items-center transition hover:bg-neutral-300">
           <PlayIcon className="text-black w-4 lg:w-5" />
         </div>
-        <FavoriteButton movieId={data.id} />
-        <div onClick={() => openModal(data?.id)} className="cursor-pointer ml-auto group/item w-6 h-6 lg:w-10 lg:h-10 border-white border-2 rounded-full flex justify-center items-center transition hover:border-neutral-300">
+        <FavoriteButton movieId={data._id} />
+        <div onClick={() => openModal(data?._id)} className="cursor-pointer ml-auto group/item w-6 h-6 lg:w-10 lg:h-10 border-white border-2 rounded-full flex justify-center items-center transition hover:border-neutral-300">
           <ChevronDownIcon className="text-white group-hover/item:text-neutral-300 w-4 lg:w-5" />
         </div>
       </div>
@@ -55,19 +55,19 @@ const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
         New <span className="text-white">2023</span>
       </p>
       <div className="flex flex-row mt-2 gap-2 items-center"> 
-        <p className="text-white text-[10px] lg:text-sm">{data.duration}</p>
+        <p className="text-white text-[10px] lg:text-sm">{data.runtime}</p>
       </div>
       <div className="flex flex-row items-center gap-2 mt-2 text-[8px] text-white lg:text-sm">
-        <p>{data.genre}</p>
+        <p>{data?.genres?.map((genre:string)=><span key={genre} className="mr-2">{genre}</span>)}</p>
       </div>
     </>
   )
    
   return (
     <div className="group bg-zinc-900 col-span relative">
-      <img onMouseEnter={loadVideo} className="w-full aspect-[4/3] object-cover transition delay-[500ms] duration-[200ms] opacity-100 group-hover:opacity-0 rounded-sm" alt="Movie" src={data?.thumbnailUrl}></img>
+      <img onMouseEnter={loadVideo} className="w-full aspect-[4/3] object-cover transition delay-[500ms] duration-[200ms] opacity-100 group-hover:opacity-0 rounded-sm" alt="Movie" src={data?.poster}></img>
       <div onMouseLeave={discardVideo} className={`absolute top-0 left-0 z-10 opacity-0 pointer-events-none invisible sm:visible w-full scale-100 group-hover:-translate-y-[10vh] group-hover:pointer-events-auto group-hover:scale-[1.25] group-hover:opacity-100 transition delay-[500ms] duration-[300ms] ${align}`}>
-        <video onClick={redirectToWatch} ref={videoRef} poster={data?.thumbnailUrl} className="w-full aspect-[4/3] object-cover rounded-t-md cursor-pointer" loop src={data?.videoUrl} preload="none"></video>
+        <video onClick={redirectToWatch} ref={videoRef} poster={data?.poster} className="w-full aspect-[4/3] object-cover rounded-t-md cursor-pointer" loop src={data?.previewLink} preload="none"></video>
         <div className="z-10 bg-neutral-800 p-2 lg:p-4 absolute w-full shadow-md rounded-b-md">
           {info}
         </div>

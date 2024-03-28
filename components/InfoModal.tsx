@@ -18,7 +18,6 @@ const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
   const videoRef=useRef<HTMLVideoElement>(null);
   const { movieId } = useInfoModalStore();
   const { data = {} } = useMovie(movieId);
-
   useEffect(() => {
     setIsVisible(!!visible);
   }, [visible]);
@@ -55,7 +54,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
         <div className={`${isVisible ? 'scale-100' : 'scale-0'} transform duration-300 relative flex-auto bg-zinc-900 drop-shadow-md`}>
 
           <div className="relative h-96">
-            <video ref={videoRef} poster={data?.thumbnailUrl} loop src={data?.videoUrl} className="w-full brightness-[60%] object-cover h-[120%] mask-video-gradient" />
+            <video ref={videoRef} poster={data?.poster} loop src={data?.videoUrl} className="w-full brightness-[60%] object-cover h-[120%] mask-video-gradient" />
             <div onClick={handleClose} className="cursor-pointer absolute top-3 right-3 h-10 w-10 rounded-full bg-black bg-opacity-70 flex items-center justify-center">
               <XMarkIcon className="text-white w-6" />
             </div>
@@ -76,14 +75,14 @@ const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
                 New
               </p>
               <p className="text-white text-lg">
-                {data?.duration}
+                {data?.languages}
               </p>
               <p className="text-white text-lg">
-                {data?.genre}
+                {data?.genres?.map((genre:string)=><span key={genre} className="mr-2">{genre}</span>)}
               </p>
             </div>
             <p className="text-white text-lg">
-              {data?.description}
+              {data?.fullplot}
             </p>
           </div>
 

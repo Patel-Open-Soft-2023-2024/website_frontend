@@ -12,7 +12,7 @@ import useInfoModalStore from "@/hooks/useInfoModalStore";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-
+  console.log("index",{ session });
   if (!session) {
     return {
       redirect: {

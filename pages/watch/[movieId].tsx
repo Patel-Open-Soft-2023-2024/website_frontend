@@ -4,10 +4,30 @@ import { useRouter } from 'next/router';
 import useMovie from '@/hooks/useMovie';
 // import StyledPlayer from "@/components/StyledPlayer";
 import dynamic from 'next/dynamic'
+import { getSession } from 'next-auth/react';
+import { NextPageContext } from 'next';
 
 const DynamicStyledPlayer = dynamic(() => import("@/components/StyledPlayer"), {
     ssr: false,
 })
+
+export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
+  console.log("index",{ session });
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}
+
 
 const Watch = () => {
   const router = useRouter();

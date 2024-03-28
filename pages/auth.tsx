@@ -10,7 +10,7 @@ import Input from "@/components/Input";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-
+  console.log("auth",{session});
   if (session) {
     return {
       redirect: {

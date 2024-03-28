@@ -7,6 +7,9 @@ const useMovie = (id?: string) => {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
+  console.log(data);
+  data && (data.previewLink = "https://dge8ab9n7stt8.cloudfront.net/Video/preview_Road_House.mp4")
+
   return {
     data,
     error,

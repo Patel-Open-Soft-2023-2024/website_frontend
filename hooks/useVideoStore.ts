@@ -5,7 +5,7 @@ export interface VideoStoreInterface {
   video:HTMLVideoElement|null;
   muted:boolean;
   setMuted:(muted:boolean)=>void;
-  setVideo:(video:HTMLVideoElement,title:string)=>{}
+  setVideo:(video:HTMLVideoElement,title:string)=>void
 }
 
 const useVideoStore = create<VideoStoreInterface>((set) => ({
