@@ -26,10 +26,15 @@ const {query,deepQuery} = useSearchStore();
 const autocompleteResults = useAutoComplete(query);
 const diverseSearchResults = useDiverseSearch(query);
 const deepSearchResults = useDeepSearch(deepQuery);
-if(!autocompleteResults) return null;
+console.log(diverseSearchResults)
+// if(!autocompleteResults) return null;
   return (
     <div className="text-white pt-40">
         <SearchResultList title={"autocomplete"} data={autocompleteResults.data} />
+        <SearchResultList title={"cast"} data={diverseSearchResults.data?.cast} />
+        <SearchResultList title={"directors"} data={diverseSearchResults.data?.directors} />
+        <SearchResultList title={"genres"} data={diverseSearchResults.data?.genres} />
+        <SearchResultList title={"title"} data={diverseSearchResults.data?.title} />
         <SearchResultList title={"deep "} data={deepSearchResults.data} />
     </div>
   );

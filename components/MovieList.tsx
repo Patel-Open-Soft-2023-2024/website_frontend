@@ -22,14 +22,14 @@ interface MovieListProps {
 //     return ()=>removeEventListener("resize",setDynamicCount)
 //   },[]);
 //   return count;
-// }
+// }previewLink
 
 const MovieList: React.FC<MovieListProps> = ({title }) => {
   const { data } = useMovieList(title);
   const rowRef=useRef<HTMLDivElement>(null);
   if(!data) return null;
   return (
-    <div className="px-12 mt-4 space-y-8">
+    <div className="px-12 mt-8 space-y-4">
       <p className="text-white text-md md:text-xl lg:text-2xl font-semibold mb-4">{title}</p>
       <div 
         className="relative grid grid-cols-5 gap-2" 

@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       throw new Error('Missing Id');
     }
     const movie=await axiosMainServerInstance.get(`/search?movie=${query}`);
-    return res.status(200).json(movie);
+    return res.status(200).json(movie.data);
   } catch (error) {
     console.log(error);
     return res.status(500).end();

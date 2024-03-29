@@ -34,7 +34,7 @@ const Home = (props:any) => {
   const sections=props.sections as string[];
   // const { data: favorites = [] } = useFavorites();
   const { isOpen, closeModal } = useInfoModalStore();
-  const {query} = useSearchStore();
+  const {query,deepQuery} = useSearchStore();
   const Browse = (
     <>
       <Billboard />
@@ -47,7 +47,7 @@ const Home = (props:any) => {
     <>
       <InfoModal visible={isOpen} onClose={closeModal} />
       <Navbar />
-      {query?<SearchResults />: Browse}
+      {(query||deepQuery)?<SearchResults />: Browse}
     </>
   );
 };

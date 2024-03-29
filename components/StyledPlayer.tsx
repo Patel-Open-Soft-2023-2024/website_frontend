@@ -1,5 +1,5 @@
 'use client'
-import { Movie } from "@prisma/client";
+import { Movie } from "@/types";
 import React, { useRef, useEffect, useState, useCallback } from "react"
 import ReactPlayer from 'react-player';
 import { CSSTransition } from "react-transition-group";
@@ -67,7 +67,7 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
     
     useEffect(() => {
         // console.log('loaded')
-        setUrl(data?.videoUrl);
+        setUrl(data?.previewLink);
     }, []);
     
     const isIdle = useIdle({timeToIdle: 5000,ignoredEventsWhenIdle:[]})
@@ -107,7 +107,7 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
                   {data?.title}
                 </p>
                 <p className="text-white text-[8px] md:text-lg mt-3 md:mt-8 w-[90%] md:w-[80%] lg:w-[50%] drop-shadow-xl">
-                  {data?.description}
+                  {data?.plot}
                 </p>
             </div>
         </div>

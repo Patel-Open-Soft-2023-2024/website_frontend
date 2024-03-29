@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import useSwr from 'swr'
+import useSwrImmutable from "swr/immutable";
+
 import fetcher from '@/libs/fetcher';
 import { Autocomplete, DiverseSearch, SemanticSearch } from '@/types';
 
@@ -21,7 +23,7 @@ const useSearchStore = create<SearchStoreInterface>((set) => ({
 }));
 
 export const useAutoComplete= (query:string)=>{
-    const { data, error, isLoading } = useSwr(`/api/search/autocomplete/${query}`, fetcher, {
+    const { data, error, isLoading } = useSwrImmutable(`/api/search/autocomplete/${query}`, fetcher, {
         revalidateIfStale: false,
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
@@ -39,7 +41,7 @@ export const useDiverseSearch= (query:string)=>{
         revalidateOnReconnect: false,
       });
       return {
-        data :data as DiverseSearch[],
+        data :data as DiverseSearch,
         error,
         isLoading
       }

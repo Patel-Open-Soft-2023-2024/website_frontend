@@ -39,6 +39,8 @@ const Search : React.FC<SearchProps> = ({
     url.searchParams.delete("q");
     if(searchQuery){
       url.searchParams.set("q", searchQuery);
+      inputRef.current && (inputRef.current.getElementsByTagName("input")[0].value=searchQuery);
+      setShowSearchBar(true);
     }
     history.pushState({}, "", url);
   },[searchQuery])
