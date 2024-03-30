@@ -8,7 +8,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method !== 'POST') {
       return res.status(405).end();
     }
-
+    const query = req.query;
+    console.log("query",query);
     const { currentUser } = await serverAuth(req, res);
     const {id:plan} = req.body;
     if(!currentUser.email || !plan)return res.status(401).end();

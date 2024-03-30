@@ -8,6 +8,7 @@ import FavoriteButton from '@/components/FavoriteButton';
 import useInfoModalStore from '@/hooks/useInfoModalStore';
 import useVideoStore from "@/hooks/useVideoStore";
 import { CSSTransition } from 'react-transition-group';
+import useProfileStore from '@/hooks/useProfileStore';
 
 interface MovieCardProps {
   data: Movie;
@@ -20,8 +21,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
   const videoRef=useRef<HTMLVideoElement>(null);
   const { openModal } = useInfoModalStore();
   const {video:videoEl} =useVideoStore();
+  const {profileId}=useProfileStore();
 
-  const redirectToWatch = useCallback(() => data._id && router.push(`/watch/${data._id}`), [router, data._id]);
+  const redirectToWatch = useCallback(() => data._id && router.push(`/watch/${data._id}&${profileId}`), [router, data._id,profileId]);
   const loadVideo=async ()=>{
     const playVideo=( )=>{
       if (videoRef!.current && data){

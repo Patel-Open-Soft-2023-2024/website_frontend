@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 
@@ -12,6 +12,8 @@ import useSearchStore from "@/hooks/useSearchStore";
 import SearchResults from "@/components/SearchResults";
 import useFavorites from "@/hooks/useFavorites";
 import useProfiles from "@/hooks/useProfiles";
+import useProfileStore from "@/hooks/useProfileStore";
+import useSections from "@/hooks/useSections";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -23,26 +25,27 @@ export async function getServerSideProps(context: NextPageContext) {
       },
     };
   }
-  const sections=await axiosMainServerInstance("/home");
   return {
-    props: {
-      sections:sections.data as string[]
-    },
+    props: {},
   };
 }
 
-const Home = (props:any) => {
-  const sections=props.sections as string[];
+const Home = () => {
+  const {data:sections} = useSections();
+  const {setProfile}=useProfileStore();
   const { data: profiles } = useProfiles();
   const { data: favorites } = useFavorites();
   const { isOpen, closeModal } = useInfoModalStore();
   const {query,deepQuery} = useSearchStore();
-  console.log("favs",favorites);
+  useEffect(()=>{profiles && setProfile(profiles[0]._id)},[profiles])
   const Browse = (
     <>
       <Billboard />
-      <div className="pb-40">
-        {sections.map((section)=><MovieList key={section} title={section} />)}
+      <div className="pb-10">
+        {sections && sections.map((section)=><MovieList key={section} title={section} />)}
+      </div>
+      <div>
+        {favorites && <MovieList title="Favorites" data={favorites} />}
       </div>
     </>
   );

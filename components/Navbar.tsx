@@ -39,7 +39,7 @@ const Navbar = () => {
 
       
       <div className={`px-4 md:px-16 py-4 flex flex-row items-center relative z-40 `}>
-        <img src="/images/logo.png" className="h-4 lg:h-12" alt="Logo" />
+        <img src="/images/logo.png" onClick={()=>router.push('/')} className="h-4 lg:h-12" alt="Logo" />
         <div className="flex-row ml-8 gap-7 hidden lg:flex">
           <NavbarItem label="Home" active />
           <NavbarItem label="Series" />

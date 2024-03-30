@@ -3,9 +3,9 @@ import fetcher from '@/libs/fetcher';
 import { Movie } from '@/types';
 import useProfileStore from './useProfileStore';
 
-const useMovies = () => {
+const useFavourites = () => {
   const {profileId} = useProfileStore();
-  const { data, error, isLoading, mutate } = useSwr('/api/favorites/'+profileId, fetcher, {
+  const { data, error, isLoading, mutate } = useSwr('/api/favorites?profileId='+profileId, fetcher, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
@@ -18,4 +18,4 @@ const useMovies = () => {
   }
 };
 
-export default useMovies;
+export default useFavourites;

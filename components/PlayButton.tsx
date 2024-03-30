@@ -1,6 +1,7 @@
 import React from 'react';
 import { PlayIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/router';
+import useProfileStore from '@/hooks/useProfileStore';
 
 interface PlayButtonProps {
   movieId: string;
@@ -8,10 +9,11 @@ interface PlayButtonProps {
 
 const PlayButton: React.FC<PlayButtonProps> = ({ movieId }) => {
   const router = useRouter();
-
+  const {profileId} = useProfileStore();
+  const redirectToWatch = () => movieId && router.push(`/watch/${movieId}&${profileId}`);
   return (
     <button 
-      onClick={() => movieId && router.push(`/watch/${movieId}`)}
+      onClick={redirectToWatch}
       className="
         bg-white 
         rounded-md 

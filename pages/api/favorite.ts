@@ -1,67 +1,30 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { without } from "lodash";
-
-import prismadb from '@/libs/prismadb';
 import serverAuth from "@/libs/serverAuth";
+import { axiosMainServerInstance } from "@/libs/axiosInstance";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    if (req.method === 'POST') {
+    if (!req.body.delete) {
       const { currentUser } = await serverAuth(req, res);
-
-      const { movieId } = req.body;
-  
-      const existingMovie = await prismadb.movie.findUnique({
-        where: {
-          id: movieId,
-        }
-      });
-  
-      if (!existingMovie) {
-        throw new Error('Invalid ID');
+      // const email=currentUser?.email
+      const { movieId,profileId } = req.body;
+      console.log("POSTING FAV",req.body);
+      if(!movieId || !profileId){
+        return res.status(400).end();
       }
-  
-      const user = await prismadb.user.update({
-        where: {
-          email: currentUser.email || '',
-        },
-        data: {
-          favoriteIds: {
-            push: movieId
-          }
-        }
-      });
-  
-      return res.status(200).json(user);
+      const d=axiosMainServerInstance.post("/addwatchlist",{profileId,movieId})
+      return res.status(200).json("done");
     }
-
-    if (req.method === 'DELETE') {
+    if (req.body.delete) {
       const { currentUser } = await serverAuth(req, res);
-
-      const { movieId } = req.body;
-
-      const existingMovie = await prismadb.movie.findUnique({
-        where: {
-          id: movieId,
-        }
-      });
-
-      if (!existingMovie) {
-        throw new Error('Invalid ID');
+      const { movieId,profileId } = req.body;
+      console.log("DELETING FAV",req.body);
+      if(!movieId || !profileId){
+        return res.status(400).end();
       }
-
-      const updatedFavoriteIds = without(currentUser.favoriteIds, movieId);
-
-      const updatedUser = await prismadb.user.update({
-        where: {
-          email: currentUser.email || '',
-        },
-        data: {
-          favoriteIds: updatedFavoriteIds,
-        }
-      });
-
-      return res.status(200).json(updatedUser);
+      const d=axiosMainServerInstance.post("/delwatchlist",{profileId,movieId})
+      return res.status(200).json("done");
     }
     
     return res.status(405).end();

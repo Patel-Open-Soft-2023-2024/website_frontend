@@ -22,8 +22,9 @@ export async function getServerSideProps(context: NextPageContext) {
           },
         };
       }
-      const movieId=context.query.movieId as string;
-      console.log(movieId);
+      const queries=context.query.queries as string;
+      const [movieId,profileId]=queries.split("&");
+      console.log("*****",movieId , profileId);
       if(!movieId){
         return {
           redirect: {
@@ -32,7 +33,7 @@ export async function getServerSideProps(context: NextPageContext) {
           },
         };
       }
-      const movieLink= (await axiosMainServerInstance.post('/getlink',{email:session.user.email,movieId}))
+      const movieLink= (await axiosMainServerInstance.post('/getlink',{email:session.user.email,movieId,profileId}))
         if(movieLink.status==200){
           return {
             props: {movieLink:movieLink.data.video},
@@ -42,7 +43,7 @@ export async function getServerSideProps(context: NextPageContext) {
   catch(e){
     return {
         redirect: {
-          destination: "/plans?from=watch",
+          destination: "/plans",
           permanent: false,
         },
       }

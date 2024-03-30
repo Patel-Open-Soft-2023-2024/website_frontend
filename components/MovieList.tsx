@@ -11,6 +11,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
 interface MovieListProps {
   title: string;
+  data?: Movie[]; 
 }
 
 // const useBreakPoints=()=>{
@@ -24,13 +25,24 @@ interface MovieListProps {
 //   return count;
 // }previewLink
 
-const MovieList: React.FC<MovieListProps> = ({title }) => {
-  const { data } = useMovieList(title);
+
+
+// '#Similar to Godzilla 2000 #id: 573a139ff29313caabd00e06'
+//  usingSimilarTo=true
+//  titleWhenSimilarTo="Godzilla 2000"
+//  heading="Similar to Godzilla 2000"
+const MovieList: React.FC<MovieListProps> = ({title,data:data2 }) => {
+  const usingSimilarTo=title.startsWith('#Similar to');
+  const titleWhenSimilarTo=title.split('#id: ')[0].split('Similar to ')[1];
+  const heading=usingSimilarTo?"Similar to "+titleWhenSimilarTo:title;
+  const query=usingSimilarTo?"SimilarTo"+title.split('#id: ')[1]:title;
+  const { data:data1 } = useMovieList(query);
+  const data=data2||data1;
   const rowRef=useRef<HTMLDivElement>(null);
   if(!data) return null;
   return (
     <div className="px-12 mt-8 space-y-4">
-      <p className="text-white text-md md:text-xl lg:text-2xl font-semibold mb-4">{title}</p>
+      <p className="text-white text-md md:text-xl lg:text-2xl font-semibold mb-4">{heading}</p>
       <div 
         className="relative grid grid-cols-5 gap-2" 
         ref={rowRef}

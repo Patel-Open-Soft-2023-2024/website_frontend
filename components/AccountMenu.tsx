@@ -50,8 +50,8 @@ const Account: React.FC = () => {
           <div className=" text-white whitespace-nowrap pt-2" role="none">
             <div className="px-4 py-2 flex flex-col gap-2">
               {/* Map through the user profiles here */}
-              {profiles?.map((profile)=>(
-                <div key={profile.id} className="flex items-center space-x-3">
+              {profiles?.map((profile:any)=>(
+                <div key={profile._id} className="flex items-center space-x-3">
                   <Image src="/images/default-blue.png" alt="User Profile" width={32} height={32} className="rounded-sm" />
                   <a href="#" className="text-sm text-white hover:underline">{profile.Profile_name}</a>
                 </div>)

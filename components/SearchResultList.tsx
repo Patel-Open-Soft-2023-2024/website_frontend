@@ -27,9 +27,9 @@ interface SearchResultListProps {
 
 const SearchResultList: React.FC<SearchResultListProps> = ({title,data }) => {
   const rowRef=useRef<HTMLDivElement>(null);
-  if(!data) return null;
+  if(!data || !data.length) return null;
   return (
-    <div className="px-12 mt-4 space-y-8">
+    <div className="px-12 mt-12 space-y-4">
       <p className="text-white text-md md:text-xl lg:text-2xl font-semibold mb-4">{title}</p>
       <div 
         className="relative grid grid-cols-5 gap-2" 

@@ -30,12 +30,12 @@ const deepSearchResults = useDeepSearch(deepQuery);
 // if(!autocompleteResults) return null;
   return (
     <div className="text-white pt-40">
-        <SearchResultList title={"autocomplete"} data={autocompleteResults.data} />
-        <SearchResultList title={"cast"} data={diverseSearchResults.data?.cast} />
-        <SearchResultList title={"directors"} data={diverseSearchResults.data?.directors} />
-        <SearchResultList title={"genres"} data={diverseSearchResults.data?.genres} />
-        <SearchResultList title={"title"} data={diverseSearchResults.data?.title} />
-        <SearchResultList title={"deep "} data={deepSearchResults.data} />
+        <SearchResultList title={"Are you looking for"} data={autocompleteResults.data} />
+        <SearchResultList title={"Based Genres"} data={diverseSearchResults.data?.genres} />
+        <SearchResultList title={"Based on Directors"} data={diverseSearchResults.data?.directors} />
+        <SearchResultList title={"Based on Cast"} data={diverseSearchResults.data?.cast} />
+        <SearchResultList title={"Based on Title"} data={diverseSearchResults.data?.title} />
+        <SearchResultList title={"Based on Plot Meaning"} data={deepSearchResults.data} />
     </div>
   );
 }

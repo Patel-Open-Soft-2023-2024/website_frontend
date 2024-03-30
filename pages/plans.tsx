@@ -8,17 +8,7 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import axios from "axios";
 
 export async function getServerSideProps(context: NextPageContext) {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/auth',
-        permanent: false,
-      }
-    }
-  }
-
+  console.log("native",context.query);
   return {
     props: {}
   }
@@ -27,7 +17,6 @@ export async function getServerSideProps(context: NextPageContext) {
 
 const App = () => {
   const router = useRouter();
-  const { data: currentUser } = useCurrentUser();
   const onPlanSelected = useCallback(async(id:string) => {
     try{
       const res=await axios.post("/api/subscribe",{id});
@@ -44,7 +33,7 @@ const App = () => {
   ]
 
   const PlansComponent= 
-      <div className="mx-6 grid grid-cols-3 items-center justify-center gap-8 mt-10">
+      <div className="mx-6 flex flex-col justify-start items-stretch md:grid md:grid-cols-3 md:items-center md:justify-center gap-8 mt-10">
         {plans.map((data, index) => (
             <div  key={data.id} className="relative p-6 bg-white border border-neutral-500 group h-full rounded-2xl lg:hover:-translate-y-6 ease-in duration-300 hover:bg-black hover:text-white">
               <div className="flex flex-row gap-5 items-center">
@@ -80,7 +69,7 @@ const App = () => {
       </div>
 
   return (
-    <div className="flex items-center h-full justify-center">
+    <div className="flex pt-8 items-start md:items-center h-full justify-center">
       <div className="flex flex-col">
         <h1 className="text-3xl md:text-6xl text-white text-center">Select Your Plan</h1>
             {PlansComponent}

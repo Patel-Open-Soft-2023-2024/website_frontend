@@ -8,10 +8,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(405).end();
     }
     await serverAuth(req, res);
-    const random=await axiosMainServerInstance.get('/random');
-    return res.status(200).json(random.data[0]);
+    const profileId= req.query.profileId as string;
+    console.log("profileId",profileId);
+    if(!profileId){
+      return res.status(400).end();
+    }
+    const result=await axiosMainServerInstance.get('/home?profileId='+profileId);
+    console.log("section found with",profileId,":",result.data);
+    return res.status(200).json(result.data);
   } catch (error) {
-    console.log("error in /random" ,req.query);
+    console.log("error in /sections",req.query);
     return res.status(500).end();
   }
 }

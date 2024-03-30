@@ -7,12 +7,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method !== 'GET') {
       return res.status(405).end();
     }
-
     const { currentUser } = await serverAuth(req, res);
-    const profiles= (await axiosMainServerInstance.post('/getallprofile/next',{email:currentUser.email})).data
-    return res.status(200).json(profiles);
+    const profiles= await axiosMainServerInstance.post('/getallprofile/next',{email:currentUser.email})
+    console.log("profiles found",profiles.data);
+    return res.status(200).json(profiles.data);
   } catch (error) {
-    console.log("error in /profiles");
+    console.log("error in /profiles",error);
     return res.status(500).end();
   }
 }
