@@ -27,9 +27,8 @@ const App = () => {
 
   const redeem=()=>{
     axiosMainServerInstance.post("/redeem",{redeemKey}).then((res:any)=>{
-        console.log("redeem res:",res);
-        console.log("redemd msg:",res.data.msg);
         setMsg(res.data.msg);
+        router.push("/");
     }).catch((err:any)=> setMsg(err.msg));
   }
   return (

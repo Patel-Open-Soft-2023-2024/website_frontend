@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const random=await axiosMainServerInstance('/random');
     return res.status(200).json(random.data[0]);
   } catch (error) {
-    console.log(error);
+    console.log("error in /random");
     return res.status(500).end();
   }
 }

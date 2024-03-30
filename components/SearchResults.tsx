@@ -26,7 +26,7 @@ const {query,deepQuery} = useSearchStore();
 const autocompleteResults = useAutoComplete(query);
 const diverseSearchResults = useDiverseSearch(query);
 const deepSearchResults = useDeepSearch(deepQuery);
-console.log(diverseSearchResults)
+// console.log(diverseSearchResults)
 // if(!autocompleteResults) return null;
   return (
     <div className="text-white pt-40">

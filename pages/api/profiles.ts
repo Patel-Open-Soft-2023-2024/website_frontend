@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import serverAuth from "@/libs/serverAuth";
+import { axiosMainServerInstance } from "@/libs/axiosInstance";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -8,10 +9,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const { currentUser } = await serverAuth(req, res);
-
-    return res.status(200).json(currentUser);
+    const profiles= (await axiosMainServerInstance.post('/getallprofile/next',{email:currentUser.email})).data
+    return res.status(200).json(profiles);
   } catch (error) {
-    console.log("error in /current");
+    console.log("error in /profiles");
     return res.status(500).end();
   }
 }

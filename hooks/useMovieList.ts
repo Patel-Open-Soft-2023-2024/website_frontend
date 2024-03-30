@@ -8,7 +8,7 @@ const useMovieList = (name:string) => {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
-  console.log(data);
+  // console.log(data);
   return {
     data :data as Movie[],
     error,

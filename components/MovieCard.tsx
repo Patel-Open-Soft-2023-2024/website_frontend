@@ -21,7 +21,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
   const { openModal } = useInfoModalStore();
   const {video:videoEl} =useVideoStore();
 
-  const redirectToWatch = useCallback(() => router.push(`/watch/${data._id}`), [router, data._id]);
+  const redirectToWatch = useCallback(() => data._id && router.push(`/watch/${data._id}`), [router, data._id]);
   const loadVideo=async ()=>{
     const playVideo=( )=>{
       if (videoRef!.current && data){
@@ -50,7 +50,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
               {data.title}
         </div>
         <div onClick={redirectToWatch} className="cursor-pointer w-6 h-6 lg:w-10 lg:h-10 bg-white rounded-full flex justify-center items-center transition hover:bg-neutral-300">
-          <PlayIcon className="text-black w-4 lg:w-5" />
+          <PlayIcon className="text-black w-4 lg:w-5"  />
         </div>
         <FavoriteButton movieId={data._id} />
         <div onClick={() => openModal(data?._id)} className="cursor-pointer ml-auto group/item w-6 h-6 lg:w-10 lg:h-10 border-white border-2 rounded-full flex justify-center items-center transition hover:border-neutral-300">
@@ -79,7 +79,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
     <div className="group col-span relative">
         <img onMouseEnter={loadVideo} className="w-full aspect-[4/3] object-cover transition delay-[500ms] duration-[200ms] opacity-100 group-hover:opacity-0 rounded-md" src={data.poster} alt={data.title}/>
         <div onMouseLeave={discardVideo} className={`absolute top-0 left-0 z-10 opacity-0 pointer-events-none invisible sm:visible w-full scale-100 group-hover:-translate-y-[10vh] group-hover:pointer-events-auto group-hover:scale-[1.25] group-hover:opacity-100 transition delay-[500ms] duration-[300ms] ${align}`}>
-          <video onClick={redirectToWatch} ref={videoRef} poster={data?.poster} className="w-full aspect-[4/3] object-cover rounded-t-md cursor-pointer" loop src={data?.previewLink} preload="none"></video>
+          <video onClick={redirectToWatch} muted ref={videoRef} poster={data?.poster} className="w-full aspect-[4/3] object-cover rounded-t-md cursor-pointer" loop src={data?.previewLink} preload="none"></video>
           <div className="z-10 bg-neutral-800 p-2 lg:p-4 absolute w-full shadow-md rounded-b-md">
             {info}
           </div>

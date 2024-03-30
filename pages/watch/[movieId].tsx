@@ -12,21 +12,41 @@ const DynamicStyledPlayer = dynamic(() => import("@/components/StyledPlayer"), {
 })
 
 export async function getServerSideProps(context: NextPageContext) {
-  const session = await getSession(context);
-  if (!session || !session?.user?.email) {
-    return {
-      redirect: {
-        destination: "/auth",
-        permanent: false,
-      },
-    };
+  try{
+      const session = await getSession(context);
+      if (!session || !session?.user?.email) {
+        return {
+          redirect: {
+            destination: "/auth",
+            permanent: false,
+          },
+        };
+      }
+      const movieId=context.query.movieId as string;
+      console.log(movieId);
+      if(!movieId){
+        return {
+          redirect: {
+            destination: "/",
+            permanent: false,
+          },
+        };
+      }
+      const movieLink= (await axiosMainServerInstance.post('/getlink',{email:session.user.email,movieId}))
+        if(movieLink.status==200){
+          return {
+            props: {movieLink:movieLink.data.video},
+          };
+        }
   }
-  const movieId=context.query.movieId as string;
-  console.log({movieId})
-  const movieLink= (await axiosMainServerInstance.post('/getlink',{email:session.user.email,movieId})).data;
-  return {
-    props: {movieLink},
-  };
+  catch(e){
+    return {
+        redirect: {
+          destination: "/plans?from=watch",
+          permanent: false,
+        },
+      }
+    }
 }
 
 
@@ -34,7 +54,7 @@ const Watch = (props:any) => {
   const router = useRouter();
   const { movieId } = router.query;
   const { data } = useMovie(movieId as string);
-
+  console.log(props.movieLink);
   return (
     <div className="h-screen w-screen bg-black">
       <nav className="fixed w-full p-4 z-10 flex flex-row items-center gap-8 bg-black bg-opacity-70">

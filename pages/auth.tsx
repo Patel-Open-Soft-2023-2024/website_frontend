@@ -19,13 +19,6 @@ export async function getServerSideProps(context: NextPageContext) {
     };
   }
 
-  const sending={
-    NEXTJS_SECRET_KEY:"sk_ACg8ocKRW_F20EC2UvydQwJ5tDSYc17v",
-    email:session?.user.email,
-  }
-  console.log({sending});
- 
-
   return {
     props: {},
   };

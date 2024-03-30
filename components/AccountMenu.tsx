@@ -4,12 +4,14 @@ import useCurrentUser from '@/hooks/useCurrentUser';
 import Image from 'next/image';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { CSSTransition } from 'react-transition-group';
+import useProfiles from '@/hooks/useProfiles';
 
 const Account: React.FC = () => {
   const { data: currentUser } = useCurrentUser();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
+  
+  const {data:profiles}=useProfiles();
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -48,18 +50,12 @@ const Account: React.FC = () => {
           <div className=" text-white whitespace-nowrap pt-2" role="none">
             <div className="px-4 py-2 flex flex-col gap-2">
               {/* Map through the user profiles here */}
-              <div className="flex items-center space-x-3">
-                <Image src="/images/default-red.png" alt="User Profile" width={32} height={32} className="rounded-sm" />
-                <a href="#" className="text-sm text-white hover:underline">{currentUser?.name}</a>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Image src="/images/default-green.png" alt="User Profile" width={32} height={32} className="rounded-sm" />
-                <a href="#"className="text-sm text-white hover:underline">"TODO: add to database"</a>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Image src="/images/default-blue.png" alt="User Profile" width={32} height={32} className="rounded-sm" />
-                <a href="#" className="text-sm text-white hover:underline">Profile 3</a>
-              </div>
+              {profiles?.map((profile)=>(
+                <div key={profile.id} className="flex items-center space-x-3">
+                  <Image src="/images/default-blue.png" alt="User Profile" width={32} height={32} className="rounded-sm" />
+                  <a href="#" className="text-sm text-white hover:underline">{profile.Profile_name}</a>
+                </div>)
+              )}
               {/* Repeat the above block for other profiles */}
             </div>
             <div className="px-4 py-2 flex flex-col gap-2 opacity-75">

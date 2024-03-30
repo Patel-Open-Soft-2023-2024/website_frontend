@@ -11,12 +11,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { currentUser } = await serverAuth(req, res);
     const {id:plan} = req.body;
-
-    const { data } = await axiosMainServerInstance.post('/subscribe?plan=' + plan);
+    if(!currentUser.email || !plan)return res.status(401).end();
+    const { data } = await axiosMainServerInstance.post('/subscribe?plan=' + plan,{email:currentUser?.email});
     
     return res.status(200).json(data);
   } catch (error) {
-    console.log(error);
+    console.log("error in /subscribe");
     return res.status(500).end();
   }
 }

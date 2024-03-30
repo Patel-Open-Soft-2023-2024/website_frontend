@@ -11,10 +11,10 @@ import {axiosMainServerInstance} from "@/libs/axiosInstance";
 import useSearchStore from "@/hooks/useSearchStore";
 import SearchResults from "@/components/SearchResults";
 import useFavorites from "@/hooks/useFavorites";
+import useProfiles from "@/hooks/useProfiles";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-  console.log(session?.user?.email);
   if (!session?.user?.email) {
     return {
       redirect: {
@@ -33,10 +33,11 @@ export async function getServerSideProps(context: NextPageContext) {
 
 const Home = (props:any) => {
   const sections=props.sections as string[];
-  const { data: favorites = [] } = useFavorites();
+  const { data: profiles } = useProfiles();
+  const { data: favorites } = useFavorites();
   const { isOpen, closeModal } = useInfoModalStore();
   const {query,deepQuery} = useSearchStore();
-  console.log(favorites);
+  console.log("favs",favorites);
   const Browse = (
     <>
       <Billboard />

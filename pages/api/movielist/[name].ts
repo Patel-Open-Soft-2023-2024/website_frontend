@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const movie=await axiosMainServerInstance.get(`/section/${name}`);
     return res.status(200).json(movie.data);
   } catch (error) {
-    console.log(error);
+    console.log(" error in /movielist/[name]",req.query);
     return res.status(500).end();
   }
 }
