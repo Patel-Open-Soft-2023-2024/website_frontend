@@ -8,4 +8,7 @@ export const axiosMainServerInstance = axios.create({
   // baseURL: 'http://10.145.127.24:4000',
      baseURL: 'http://localhost:4000',
   // Any other configurations here
+  headers: {
+    Authorization: 'Bearer NEXTJS_' + process.env.NEXTAUTH_SECRET,
+  } 
 });

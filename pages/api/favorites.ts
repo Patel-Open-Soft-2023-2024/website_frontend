@@ -1,6 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
-import prismadb from '@/libs/prismadb';
 import serverAuth from "@/libs/serverAuth";
 import { axiosMainServerInstance } from "@/libs/axiosInstance";
 
@@ -15,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const favoritedMovies = await axiosMainServerInstance.get('/favorites')
     return res.status(200).json(favoritedMovies);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(500).end();
   }
 }

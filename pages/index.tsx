@@ -12,8 +12,10 @@ import useSearchStore from "@/hooks/useSearchStore";
 import SearchResults from "@/components/SearchResults";
 
 export async function getServerSideProps(context: NextPageContext) {
+  console.log("HOME");
   const session = await getSession(context);
-  if (!session) {
+  console.log(session?.user?.email);
+  if (!session?.user?.email) {
     return {
       redirect: {
         destination: "/auth",
@@ -22,7 +24,6 @@ export async function getServerSideProps(context: NextPageContext) {
     };
   }
   const sections=await axiosMainServerInstance("/home");
-
   return {
     props: {
       sections:sections.data as string[]

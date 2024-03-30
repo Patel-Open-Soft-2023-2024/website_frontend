@@ -60,6 +60,24 @@ export const authOptions: AuthOptions = {
   pages: {
     signIn: "/auth",
   },
+  callbacks: {
+    async jwt({ token, account, profile }) {
+      // Persist the OAuth access_token and or the user id to the token right after signin
+      if (account && account.access_token && account.id_token) {
+        token.accessToken = account.access_token;
+        token.idToken = account.id_token;
+      }
+      return token
+    },
+    async session({ session, token }) {
+      // Add access_token to session for use in API requests
+      if(token && token.accessToken && token.idToken){
+        session.user.accessToken = token.accessToken;
+        session.user.idToken = token.idToken;
+      }
+      return session;
+    },
+  },
   debug: process.env.NODE_ENV === "development",
   adapter: PrismaAdapter(prismadb),
   session: { strategy: "jwt" },

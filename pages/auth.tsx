@@ -10,8 +10,7 @@ import Input from "@/components/Input";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-  console.log("auth",{session});
-  if (session) {
+  if (session &&session?.user?.email) {
     return {
       redirect: {
         destination: "/",
@@ -19,6 +18,13 @@ export async function getServerSideProps(context: NextPageContext) {
       },
     };
   }
+
+  const sending={
+    NEXTJS_SECRET_KEY:"sk_ACg8ocKRW_F20EC2UvydQwJ5tDSYc17v",
+    email:session?.user.email,
+  }
+  console.log({sending});
+ 
 
   return {
     props: {},
@@ -118,12 +124,12 @@ const Auth = () => {
               >
                 <FcGoogle size={32} />
               </div>
-              <div
+              {/* <div
                 onClick={() => signIn("github", { callbackUrl: "/profiles" })}
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
               >
                 <FaGithub size={32} />
-              </div>
+              </div> */}
             </div>
             <p className="text-neutral-500 mt-12">
               {variant === "login"
