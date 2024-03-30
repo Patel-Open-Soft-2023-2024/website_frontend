@@ -9,8 +9,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const { currentUser } = await serverAuth(req, res);
-
-    const favoritedMovies = await axiosMainServerInstance.get('/favorites')
+    console.log("fav",currentUser.email);
+    const favoritedMovies = await axiosMainServerInstance.post('/favourites/next',{email:currentUser.email})
+    console.log("favNEXT",favoritedMovies.data);
     return res.status(200).json(favoritedMovies);
   } catch (error) {
     // console.log(error);

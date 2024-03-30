@@ -10,9 +10,9 @@ import useInfoModalStore from "@/hooks/useInfoModalStore";
 import {axiosMainServerInstance} from "@/libs/axiosInstance";
 import useSearchStore from "@/hooks/useSearchStore";
 import SearchResults from "@/components/SearchResults";
+import useFavorites from "@/hooks/useFavorites";
 
 export async function getServerSideProps(context: NextPageContext) {
-  console.log("HOME");
   const session = await getSession(context);
   console.log(session?.user?.email);
   if (!session?.user?.email) {
@@ -33,9 +33,10 @@ export async function getServerSideProps(context: NextPageContext) {
 
 const Home = (props:any) => {
   const sections=props.sections as string[];
-  // const { data: favorites = [] } = useFavorites();
+  const { data: favorites = [] } = useFavorites();
   const { isOpen, closeModal } = useInfoModalStore();
   const {query,deepQuery} = useSearchStore();
+  console.log(favorites);
   const Browse = (
     <>
       <Billboard />

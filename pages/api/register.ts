@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { NextApiRequest, NextApiResponse } from "next";
 import prismadb from "@/libs/prismadb";
+import { axiosMainServerInstance } from "@/libs/axiosInstance";
 
 export default async function handler(
   req: NextApiRequest,
@@ -35,6 +36,8 @@ export default async function handler(
       },
     });
 
+    const inMainServer=await axiosMainServerInstance.post('/register/nextjs',{email,name,password});
+    console.log("reg",inMainServer.data);
     return res.status(200).json(user);
   } catch (error) {
     return res.status(400).json({ error: `Something went wrong: ${error}` });
