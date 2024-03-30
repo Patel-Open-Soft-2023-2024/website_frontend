@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import prismadb from '@/libs/prismadb';
 import serverAuth from "@/libs/serverAuth";
+import { axiosMainServerInstance } from "@/libs/axiosInstance";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -11,14 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { currentUser } = await serverAuth(req, res);
 
-    const favoritedMovies = await prismadb.movie.findMany({
-      where: {
-        id: {
-          in: currentUser?.favoriteIds,
-        }
-      }
-    });
-
+    const favoritedMovies = await axiosMainServerInstance.get('/favorites')
     return res.status(200).json(favoritedMovies);
   } catch (error) {
     console.log(error);

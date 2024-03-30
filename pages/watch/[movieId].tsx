@@ -6,6 +6,8 @@ import useMovie from '@/hooks/useMovie';
 import dynamic from 'next/dynamic'
 import { getSession } from 'next-auth/react';
 import { NextPageContext } from 'next';
+import { axiosMainServerInstance } from '@/libs/axiosInstance';
+import serverAuth from '@/libs/serverAuth';
 
 const DynamicStyledPlayer = dynamic(() => import("@/components/StyledPlayer"), {
     ssr: false,
@@ -22,7 +24,8 @@ export async function getServerSideProps(context: NextPageContext) {
       },
     };
   }
-
+  const movieId  = await axiosMainServerInstance.get('/getmovievideo');
+  console.log(movieId.data)
   return {
     props: {},
   };
@@ -39,7 +42,7 @@ const Watch = () => {
       <nav className="fixed w-full p-4 z-10 flex flex-row items-center gap-8 bg-black bg-opacity-70">
         <ArrowLeftIcon onClick={() => router.push('/')} className="w-4 md:w-10 text-white cursor-pointer hover:opacity-80 transition" />
       </nav>
-      <DynamicStyledPlayer data={{...data,videoUrl:"https://dge8ab9n7stt8.cloudfront.net/Video/sample.m3u8"}}/>
+      <DynamicStyledPlayer data={{...data,previewLink:"https://dge8ab9n7stt8.cloudfront.net/Video/sample.m3u8"}}/>
       {/* <video className="h-full w-full" autoPlay controls src={data?.videoUrl}></video> */}
     </div>
   )
