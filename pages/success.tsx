@@ -64,18 +64,18 @@ const App = () => {
 
       {/* Foreground card */}
       <div
-        className="p-6 md:p-8 max-w-md w-full bg-gray-900 bg-opacity-80 rounded shadow-lg z-10"
+        className="p-6 md:p-8 max-w-[40rem] w-full bg-gray-900 bg-opacity-95 rounded shadow-lg z-10"
         style={{
           // Custom styles here if needed
         }}
       >
-        <h1 className="text-3xl md:text-4xl font-bold text-white text-center">
+        <h1 className="text-3xl md:text-4xl font-bold text-white text-center py-8">
           Payment Successful
         </h1>
         <p className="text-gray-300 mt-4">
           This is your redeem key:
         </p>
-        <div className="text-center">
+        <div className="text-center py-8">
           <span className="text-red-500 font-bold">{redeemKey}</span>
         </div>
         <button

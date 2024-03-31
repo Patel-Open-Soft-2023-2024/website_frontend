@@ -53,7 +53,8 @@ export async function getServerSideProps(context: NextPageContext) {
 
 const Watch = (props:any) => {
   const router = useRouter();
-  const { movieId } = router.query;
+  const { queries } = router.query;
+  const [movieId,profileId]=(queries as string).split("&");
   const { data } = useMovie(movieId as string);
   console.log(props.movieLink);
   return (

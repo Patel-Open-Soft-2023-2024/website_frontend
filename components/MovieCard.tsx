@@ -29,10 +29,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
       if (videoRef!.current && data){
         videoEl && videoEl.pause();
         videoRef.current.play();
-        console.log("play->",data.title);
+        console.log("play->",data.title,data.previewLink);
       }
     }
-    setShowVideoTimeout(setTimeout(playVideo,500));
+    setShowVideoTimeout(setTimeout(playVideo,800));
   }
   const discardVideo=async()=>{
     showVideoTimeout && clearTimeout(showVideoTimeout);
@@ -81,7 +81,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data,align }) => {
     <div className="group col-span relative">
         <img onMouseEnter={loadVideo} className="w-full aspect-[4/3] object-cover transition delay-[500ms] duration-[200ms] opacity-100 group-hover:opacity-0 rounded-md" src={data.poster} alt={data.title}/>
         <div onMouseLeave={discardVideo} className={`absolute top-0 left-0 z-10 opacity-0 pointer-events-none invisible sm:visible w-full scale-100 group-hover:-translate-y-[10vh] group-hover:pointer-events-auto group-hover:scale-[1.25] group-hover:opacity-100 transition delay-[500ms] duration-[300ms] ${align}`}>
-          <video onClick={redirectToWatch} muted ref={videoRef} poster={data?.poster} className="w-full aspect-[4/3] object-cover rounded-t-md cursor-pointer" loop src={data?.previewLink} preload="none"></video>
+          <video onClick={redirectToWatch} muted ref={videoRef} poster={data?.poster} className="w-full aspect-[4/3] object-cover rounded-t-md cursor-pointer bg-neutral-700" loop src={data?.previewLink} preload="none"></video>
           <div className="z-10 bg-neutral-800 p-2 lg:p-4 absolute w-full shadow-md rounded-b-md">
             {info}
           </div>
