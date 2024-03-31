@@ -88,7 +88,7 @@ const Account: React.FC = () => {
                   <a href="#" className="text-sm text-white hover:underline">Help Centre</a>
                 </div>
             </div>
-            <button onClick={()=>signOut()} className="px-4 py-2 w-full text-sm text-center border-t border-neutral-500 text-white block hover:underline">Sign out of Netflix</button>
+            <button onClick={()=>signOut()} className="px-4 py-2 w-full text-sm text-center border-t border-neutral-500 text-white block hover:underline">Sign Out</button>
           </div>
         </div>
         </CSSTransition>

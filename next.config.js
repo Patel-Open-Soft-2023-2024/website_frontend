@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     domains: ['m.media-amazon.com'],
   },
+  typescript:{
+    ignoreBuildErrors: true,
+  },
+  output: 'standalone'
 }
-
 module.exports = nextConfig

@@ -31,7 +31,8 @@ const StyledPlayer:React.FC<StyledPlayerProps>=({data})=>{
 
     const handleLoad = () => {
         const internalPlayer = playerRef.current?.getInternalPlayer('hls');
-        if (internalPlayer) setLevels(internalPlayer.levels);   
+        // console.log(internalPlayer.levels)
+        if (internalPlayer) setLevels(internalPlayer.levels.filter((l:any)=>l.height!=360));   
     }
 
     const onChangeBitrate = () => {
